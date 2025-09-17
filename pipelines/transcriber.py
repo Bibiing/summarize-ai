@@ -1,0 +1,28 @@
+import whisper
+import time
+
+class Transcriber:
+    """
+    transcribe audio using OpenAI Whisper.
+    model is loaded once at initialization for efficiency.
+    """
+    def __init__(self, model_name="small"):
+        print(f"load whisper model: '{model_name}'")
+        start_time = time.time()
+        self.model = whisper.load_model(model_name)
+        print(f"model successfully loaded in {time.time() - start_time:.2f} seconds.")
+
+    def transcribe(self, file_path):
+        print(f"start transcribing: {file_path}")
+        start_time = time.time()
+        try:
+            result = self.model.transcribe(str(file_path)) 
+            print(f"transcribed {time.time() - start_time:.2f} seconds.")
+            print(f"Detected language: {result['language']}")
+            return result['text'], result['language']
+        except FileNotFoundError:
+            print(f"Error: File '{file_path}' not found.")
+            return None
+        except Exception as e:
+            print(f"Error: {e}")
+            return None
