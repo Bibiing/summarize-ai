@@ -1,9 +1,9 @@
 import time
-import hdbscan
+from sklearn.cluster import HDBSCAN
 from collections import defaultdict
 import google.generativeai as genai
-from langchain.text_splitter import RecursiveCharacterTextSplitter # https://python.langchain.com/docs/concepts/text_splitters/
-from sentence_transformers import SentenceTransformer
+from langchain.text_splitter import RecursiveCharacterTextSplitter # https://python.langchain.com/docs/how_to/recursive_text_splitter/
+from sentence_transformers import SentenceTransformer # https://sbert.net/
 
 class Summarizer:
     def __init__(self, gemini_api_key):
@@ -16,14 +16,16 @@ class Summarizer:
         except Exception as e:
             raise ValueError(f"Gemini API configuration failed: {e}")
 
-    def chunk_text(self, text, max_chunk_size=2000):
+    def chunk_text(self, text, max_chunk_size=1500):
         """
         Split the transcribed text into manageable chunks.
         """
         print("Splitting text into chunks")
         text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=max_chunk_size,
-            chunk_overlap=200
+            chunk_overlap=150,
+            length_function=len,
+            is_separator_regex=False,
         )
         chunks = text_splitter.split_text(text)
         print(f"number of chunk: {len(chunks)}")
@@ -36,11 +38,15 @@ class Summarizer:
         print("Clustering text chunks")
         start_time = time.time()
         embeddings = self.embedding_model.encode(chunks) # Creating vector embeddings
+        # texts with similar meanings will be close to each other
 
-        # Clustering with HDBSCAN
-        clusterer = hdbscan.HDBSCAN(min_cluster_size=2, metric='euclidean', cluster_selection_method='eom')
+        # Clustering with HDBSCAN: https://scikit-learn.org/stable/modules/generated/sklearn.cluster.HDBSCAN.html
+        # different from dbscan, tidak menggunakan eps (radius pencarian)
+        # visualize: https://github.com/kcv-if/Modul-ML/blob/main/Modul%201/assets/DBSCAN.gif
+        clusterer = HDBSCAN(min_cluster_size=2, metric='euclidean', cluster_selection_method='eom') # matriks jarak
         cluster_labels = clusterer.fit_predict(embeddings)
-        
+        # cluster_labels = [0, 1, 2, 1, -1, 0, 2]
+
         num_clusters = len(set(cluster_labels)) - (1 if -1 in cluster_labels else 0)
         
         clustered_chunks = defaultdict(list)
