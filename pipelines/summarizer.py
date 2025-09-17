@@ -2,7 +2,7 @@ import time
 import hdbscan
 from collections import defaultdict
 import google.generativeai as genai
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.text_splitter import RecursiveCharacterTextSplitter # https://python.langchain.com/docs/concepts/text_splitters/
 from sentence_transformers import SentenceTransformer
 
 class Summarizer:
@@ -11,7 +11,7 @@ class Summarizer:
         self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
         try:
             genai.configure(api_key=gemini_api_key)
-            self.gemini_model = genai.GenerativeModel('gemini-1.5-flash')
+            self.gemini_model = genai.GenerativeModel('gemini-2.0-flash')
             print(f"summarizer's ready in {time.time() - start_time:.2f} seconds.")
         except Exception as e:
             raise ValueError(f"Gemini API configuration failed: {e}")
