@@ -1,0 +1,51 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment
+.env
+.env.*
+*.env
+*.venv/
+venv/
+env/
+ENV/
+*.conda
+*.ipynb_checkpoints/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# VSCode / IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Output folders
+build/
+dist/
+*.egg-info/
+
+# Jupyter notebook checkpoints
+.ipynb_checkpoints/
+
+# Audio/video/raw data
+data/
+*.mp3
+*.wav
+*.mp4
+
+# Model files / downloads
+*.pth
+*.pt
+*.safetensors
+*.ckpt
+.cache/
+huggingface/
+
+# Python packaging
+pip-wheel-metadata/
