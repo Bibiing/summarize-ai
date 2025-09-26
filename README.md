@@ -1,4 +1,4 @@
-# AI Audio/Video Summarizer with Advanced Noise Reduction
+# AI Audio/Video Summarizer
 
 An intelligent audio/video processing system that transcripts and summarizes content.
 
