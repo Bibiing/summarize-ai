@@ -62,8 +62,7 @@ if __name__ == "__main__":
         print(f"file not found: {input_file}")
         exit(1)
 
-    # Step 1: Convert to standardized WAV format
-    print("\n=== STEP 1: Audio Format Standardization ===")
+    print("Audio Format Standardization")
     if input_file.suffix.lower() == ".mp4":
         print(f"Processing video file: '{input_file.name}'")
         output_dir = Path("./data/audio")
@@ -91,9 +90,9 @@ if __name__ == "__main__":
         print("Supported formats: .mp4, .mp3, .wav, .m4a, .flac, .ogg")
         exit(1)
     
-    # Step 2: Audio Enhancement (if requested)
+    # Audio Enhancement (if requested)
     if args.denoise or args.aggressive_denoise:
-        print(f"\n=== STEP 2: Audio Enhancement ===")
+        print(f"Audio Enhancement")
         enhanced_audio_path = enhance_audio(audio_path, aggressive_mode=args.aggressive_denoise)
         if enhanced_audio_path:
             audio_path = enhanced_audio_path
@@ -104,18 +103,18 @@ if __name__ == "__main__":
         print("\n=== STEP 2: Audio Enhancement (Skipped) ===")
         print("Use --denoise for adaptive noise reduction or --aggressive-denoise for maximum noise reduction")
 
-    # Step 3: Initialize AI Models
-    print(f"\n=== STEP 3: AI Model Initialization ===")
-    try: 
+    # Initialize AI Models
+    print(f"AI Model Initialization")
+    try:
         transcriber = Transcriber(model_name="small")
         summarizer = Summarizer(gemini_api_key=os.getenv("GOOGLE_API_KEY"))
-        print("✓ AI models initialized successfully")
+        print("AI models initialized successfully")
     except Exception as e:
-        print(f"❌ Initialization error: {e}")
+        print(f"Initialization error: {e}")
         exit(1)
 
-    # Step 4: Transcribe audio to text
-    print(f"\n=== STEP 4: Audio Transcription ===")
+    # Transcribe audio to text
+    print(f"Audio Transcription")
     print(f"Transcribing: {audio_path.name}")
     transcription = transcriber.transcribe(audio_path, language=args.language)
     if transcription:
@@ -123,14 +122,14 @@ if __name__ == "__main__":
         print(f"✓ Transcription completed (Language: {language})")
         print(f"Transcript length: {len(result)} characters")
         # Show first 200 characters as preview
-        preview = result[:200] + "..." if len(result) > 200 else result
-        print(f"Preview: {preview}")
+        # preview = result[:200] + "..." if len(result) > 200 else result
+        print(result)
     else:
-        print("❌ Transcription failed.")
+        print("Transcription failed.")
         exit(1)
 
-    # Step 5: Text Processing and Summarization
-    print(f"\n=== STEP 5: Text Processing & Summarization ===")
+    # Text Processing and Summarization
+    print(f"Text Processing & Summarization")
     # Split text into chunks
     chunks = summarizer.chunk_text(result, 2000)
     print(f"Text split into {len(chunks)} chunks for processing")
@@ -144,8 +143,8 @@ if __name__ == "__main__":
         clusters = {0: chunks}  # If only one chunk, assign to single cluster
         print("Single chunk - no clustering needed")
 
-    # Step 6: Generate Final Summary
-    print(f"\n=== STEP 6: Final Summary Generation ===")
+    # Generate Final Summary
+    print(f"Final Summary Generation")
     print("Generating comprehensive summary...")
     final_summary = summarizer.get_final_summary(clusters, language=language)
     
