@@ -1,11 +1,25 @@
-from moviepy import VideoFileClip
+from moviepy import VideoFileClip # https://zulko.github.io/moviepy/reference/reference/moviepy.video.io.VideoFileClip.VideoFileClip.html#moviepy.video.io.VideoFileClip.VideoFileClip
 from pathlib import Path
-import librosa
-import soundfile as sf
+import librosa # https://librosa.org/doc/latest/generated/librosa.load.html#librosa.load, https://github.com/librosa/librosa,  python package for music and audio analysis
+import soundfile as sf # https://python-soundfile.readthedocs.io/en/0.13.1/#read-write-functions 
+
+# Penjelasan dan Sumber
+# kenapa menggunakan 16000Hz? 
+# teorema sampling, prinsip reproduksi laju sampel, yaitu setidaknya 2kali frekuensi maksimum. fs = 2 * fmax. https://web.stanford.edu/class/engr76/lectures/lecture9-10.pdf
+# frekuensi audio manusia umumnya hingga 20Hz - 20000Hz, tapi untuk ucapan biasanya hingga 8000Hz. Jadi 16000Hz sudah cukup. https://en.wikipedia.org/wiki/Intelligibility_(communication)
+
+# mono? karena audio mono lebih sederhana dan mengurangi kompleksitas pemrosesan, terutama untuk tugas seperti pengenalan ucapan.
+# jika stereo, ada dua saluran (kiri dan kanan, seperti telinga manusia) yang perlu diproses secara terpisah.
+
+# Kenapa WAV? WAV adalah format audio tanpa kompresi yang mempertahankan kualitas asli rekaman.
+# karena kompresi (seperti MP3) memperkecil ukuran file yang dapat menghilangkan detail penting dalam sinyal audio.
+# explanation and example: https://www.macaulaylibrary.org/resources/why-wav/
+
+# PCM_16 adalah format penyimpanan data audio yang menggunakan 16-bit per sampel. https://en.wikipedia.org/wiki/Audio_bit_depth
 
 def convert_video_to_audio(input_path, output_path, target_sr=16000):
     """
-    Convert video to audio using moviepy, ensuring consistent WAV output.
+    Convert video to audio using moviepy.
     """
     output_path.parent.mkdir(parents=True, exist_ok=True)
     
@@ -15,7 +29,7 @@ def convert_video_to_audio(input_path, output_path, target_sr=16000):
                 print(f"Error: No audio track found in video '{input_path.name}'")
                 return None
                 
-            # Extract audio to temporary file first
+            # Extract audio to temporary file 
             temp_audio_path = output_path.with_suffix('.temp.wav')
             video.audio.write_audiofile(str(temp_audio_path), verbose=False, logger=None)
             
@@ -23,13 +37,16 @@ def convert_video_to_audio(input_path, output_path, target_sr=16000):
             print(f"Resampling audio to {target_sr} Hz for optimal processing...")
             data, sr = librosa.load(str(temp_audio_path), sr=target_sr, mono=True)
             
-            # Save as high-quality WAV
+            # Ensure sample rate is correct
+            assert sr == target_sr, f"Sample rate mismatch! Expected {target_sr}, got {sr}"
+
+            # Save
             sf.write(str(output_path), data, target_sr, subtype='PCM_16')
             
             # Clean up temporary file
             temp_audio_path.unlink()
             
-        print(f"Video converted to high-quality WAV: '{input_path.name}' -> '{output_path.name}'")
+        print(f"Video converted to WAV: '{input_path.name}' -> '{output_path.name}'")
         print(f"Output format: 16-bit WAV, {target_sr} Hz, mono")
         return output_path
         
@@ -44,11 +61,14 @@ def convert_audio_format(input_path: Path, output_path: Path, target_sr=16000):
     output_path.parent.mkdir(parents=True, exist_ok=True)
     
     try:
-        # Load audio with librosa for better format support
+        # Load audio
         print(f"Converting {input_path.name} to standardized WAV format...")
         data, sr = librosa.load(str(input_path), sr=target_sr, mono=True)
         
-        # Save as high-quality WAV
+        # Ensure sample rate is correct
+        assert sr == target_sr, f"Sample rate mismatch! Expected {target_sr}, got {sr}"
+
+        # Save
         sf.write(str(output_path), data, target_sr, subtype='PCM_16')
         print(f"Audio converted: '{input_path.name}' -> '{output_path.name}'")
         print(f"Output format: 16-bit WAV, {target_sr} Hz, mono")

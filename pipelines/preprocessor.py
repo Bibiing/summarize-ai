@@ -1,19 +1,17 @@
-import soundfile as sf
-import noisereduce as nr
-import librosa
+import soundfile as sf # https://pypi.org/project/soundfile/ for reading/writing WAV files
+import noisereduce as nr # https://github.com/timsainb/noisereduce
+import librosa #https://librosa.org/doc/latest/index.html, https://github.com/librosa/librosa,  python package for music and audio analysis
 import numpy as np
 from pathlib import Path
 from scipy import signal
-import warnings
-warnings.filterwarnings("ignore")
 
-def convert_to_wav(input_path: Path, target_sr: int = 16000) -> Path:
+def convert_to_wav(input_path: Path, target_sr: int = 16000):
     """
     Convert any audio format to WAV with consistent sample rate.
     This ensures all audio is in the best format for processing.
     """
     try:
-        # Load audio with librosa for better format support
+        # Load audio
         data, sr = librosa.load(str(input_path), sr=target_sr, mono=True)
         
         # Create output directory
@@ -21,7 +19,7 @@ def convert_to_wav(input_path: Path, target_sr: int = 16000) -> Path:
         output_dir.mkdir(parents=True, exist_ok=True)
         output_path = output_dir / f"{input_path.stem}_converted.wav"
         
-        # Save as WAV with consistent format
+        # Save as WAV 
         sf.write(str(output_path), data, target_sr, subtype='PCM_16')
         print(f"Audio converted to WAV: {output_path}")
         return output_path
@@ -30,22 +28,20 @@ def convert_to_wav(input_path: Path, target_sr: int = 16000) -> Path:
         print(f"Error converting audio to WAV: {e}")
         return input_path  # Return original if conversion fails
 
-def assess_audio_quality(data: np.ndarray, sr: int) -> dict:
+def audio_quality(data: np.ndarray, sr: int) -> dict:
     """
     Assess audio quality to determine optimal enhancement parameters.
     """
-    # Calculate signal-to-noise ratio estimate
-    # Use spectral rolloff and zero crossing rate as quality indicators
-    spectral_rolloff = librosa.feature.spectral_rolloff(y=data, sr=sr)[0]
-    zcr = librosa.feature.zero_crossing_rate(data)[0]
-    rms_energy = librosa.feature.rms(y=data)[0]
+    spectral_rolloff = librosa.feature.spectral_rolloff(y=data, sr=sr)[0] # Seberapa tinggi frekuensi dominan → indikator clarity.
+    zcr = librosa.feature.zero_crossing_rate(data)[0] # Berapa sering sinyal melewati nol → indikator noise.
+    rms_energy = librosa.feature.rms(y=data)[0] # Energi rata-rata → indikator volume/kekuatan sinyal.
     
     # Simple quality assessment based on energy distribution
     avg_rolloff = np.mean(spectral_rolloff)
     avg_zcr = np.mean(zcr)
     avg_energy = np.mean(rms_energy)
     
-    # Determine quality level (higher rolloff and moderate ZCR usually indicate better quality)
+    # quality level (higher rolloff and moderate ZCR usually indicate better quality)
     if avg_rolloff > 4000 and avg_energy > 0.01:
         quality_level = "high"
     elif avg_rolloff > 2000 and avg_energy > 0.005:
@@ -162,7 +158,7 @@ def enhance_audio(input_path: Path, aggressive_mode: bool = False):
         print(f"Sample rate: {rate} Hz, Duration: {len(data)/rate:.2f} seconds")
         
         # Assess audio quality
-        quality_info = assess_audio_quality(data, rate)
+        quality_info = audio_quality(data, rate)
         print(f"Audio quality assessment: {quality_info['quality_level']} quality")
         print(f"  - Spectral rolloff: {quality_info['spectral_rolloff']:.0f} Hz")
         print(f"  - RMS energy: {quality_info['rms_energy']:.4f}")
