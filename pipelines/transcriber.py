@@ -4,7 +4,6 @@ import time
 class Transcriber:
     """
     transcribe audio using OpenAI Whisper.
-    model is loaded once at initialization for efficiency.
     """
     def __init__(self, model_name="small"):
         print(f"load whisper model: '{model_name}'")

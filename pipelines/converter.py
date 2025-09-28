@@ -2,6 +2,7 @@ from moviepy import VideoFileClip # https://zulko.github.io/moviepy/reference/re
 from pathlib import Path
 import librosa # https://librosa.org/doc/latest/generated/librosa.load.html#librosa.load, https://github.com/librosa/librosa,  python package for music and audio analysis
 import soundfile as sf # https://python-soundfile.readthedocs.io/en/0.13.1/#read-write-functions 
+import numpy as np
 
 # Penjelasan dan Sumber
 # kenapa menggunakan 16000Hz? 
@@ -29,22 +30,21 @@ def convert_video_to_audio(input_path, output_path, target_sr=16000):
                 print(f"Error: No audio track found in video '{input_path.name}'")
                 return None
                 
-            # Extract audio to temporary file 
-            temp_audio_path = output_path.with_suffix('.temp.wav')
-            video.audio.write_audiofile(str(temp_audio_path), verbose=False, logger=None)
+            # Extract audio directly to numpy array (in memory)
+            print(f"Extracting audio from video...")
+            audio_array = video.audio.to_soundarray()
+            original_sr = video.audio.fps
             
-            # Load with librosa and resample to target sample rate for consistency
+            # Convert stereo to mono if necessary
+            if len(audio_array.shape) > 1 and audio_array.shape[1] > 1:
+                audio_array = np.mean(audio_array, axis=1)
+            
+            # Resample to target sample rate
             print(f"Resampling audio to {target_sr} Hz for optimal processing...")
-            data, sr = librosa.load(str(temp_audio_path), sr=target_sr, mono=True)
+            data = librosa.resample(audio_array, orig_sr=original_sr, target_sr=target_sr)
             
-            # Ensure sample rate is correct
-            assert sr == target_sr, f"Sample rate mismatch! Expected {target_sr}, got {sr}"
-
             # Save
             sf.write(str(output_path), data, target_sr, subtype='PCM_16')
-            
-            # Clean up temporary file
-            temp_audio_path.unlink()
             
         print(f"Video converted to WAV: '{input_path.name}' -> '{output_path.name}'")
         print(f"Output format: 16-bit WAV, {target_sr} Hz, mono")
