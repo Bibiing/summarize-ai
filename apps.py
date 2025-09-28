@@ -42,6 +42,8 @@ def parse_args():
     parser.add_argument('--denoise', action='store_true', help='Enable adaptive audio noise reduction before transcription')
     parser.add_argument('--aggressive-denoise', action='store_true', help='Enable aggressive noise reduction for very poor quality audio')
     parser.add_argument('--force-wav', action='store_true', help='Force conversion to WAV format even if input is already WAV')
+    parser.add_argument('--transcriber-model', default="small", type=str, help='Whisper model size: tiny, base, small, medium, large')
+    parser.add_argument('--chunk_size', default=2000, type=int, help='Chunk size for text splitting during summarization (default: 2000 characters)')
     
     language_list = "\n".join([f"  {code:<5} : {name}" for code, name in sorted(LANGUAGES.items())])
     language_help = (
@@ -100,13 +102,13 @@ if __name__ == "__main__":
         else:
             print("⚠ Audio enhancement failed. Proceeding with original audio.")
     else:
-        print("\n=== STEP 2: Audio Enhancement (Skipped) ===")
+        print("\nAudio Enhancement (Skipped)")
         print("Use --denoise for adaptive noise reduction or --aggressive-denoise for maximum noise reduction")
 
     # Initialize AI Models
     print(f"AI Model Initialization")
     try:
-        transcriber = Transcriber(model_name="small")
+        transcriber = Transcriber(model_name=args.transcriber_model) 
         summarizer = Summarizer(gemini_api_key=os.getenv("GOOGLE_API_KEY"))
         print("AI models initialized successfully")
     except Exception as e:
@@ -131,7 +133,7 @@ if __name__ == "__main__":
     # Text Processing and Summarization
     print(f"Text Processing & Summarization")
     # Split text into chunks
-    chunks = summarizer.chunk_text(result, 2000)
+    chunks = summarizer.chunk_text(result, args.chunk_size) 
     print(f"Text split into {len(chunks)} chunks for processing")
     
     if len(chunks) > 1:
