@@ -1,0 +1,214 @@
+[
+  {
+    "run_id": 1,
+    "logs": [
+      {
+        "step": "INITIALIZATION",
+        "status": "INFO",
+        "message": "Starting audio/video processing pipeline",
+        "input_file": "data\\audio\\AirportAnnouncement_noise.wav",
+        "transcriber_model": "small",
+        "denoise_enabled": true,
+        "aggressive_denoise": false
+      },
+      {
+        "step": "FILE_VALIDATION",
+        "status": "SUCCESS",
+        "message": "Input file validated",
+        "file_type": ".wav"
+      },
+      {
+        "step": "AUDIO_CONVERSION",
+        "status": "INFO",
+        "message": "Starting audio format standardization"
+      },
+      {
+        "step": "AUDIO_PROCESSING",
+        "status": "INFO",
+        "message": "Processing audio file: 'AirportAnnouncement_noise.wav'"
+      },
+      {
+        "step": "AUDIO_PROCESSING",
+        "status": "INFO",
+        "message": "Using WAV file directly: AirportAnnouncement_noise.wav"
+      },
+      {
+        "step": "AUDIO_ENHANCEMENT",
+        "status": "INFO",
+        "message": "Starting audio enhancement",
+        "aggressive_mode": false
+      },
+      {
+        "step": "AUDIO_ENHANCEMENT",
+        "status": "SUCCESS",
+        "message": "Audio enhancement completed"
+      },
+      {
+        "step": "MODEL_INIT",
+        "status": "INFO",
+        "message": "Initializing AI models"
+      },
+      {
+        "step": "MODEL_INIT",
+        "status": "SUCCESS",
+        "message": "AI models initialized successfully"
+      },
+      {
+        "step": "TRANSCRIPTION",
+        "status": "INFO",
+        "message": "Starting transcription of: AirportAnnouncement_noise_enhanced.wav"
+      },
+      {
+        "step": "TRANSCRIPTION",
+        "status": "SUCCESS",
+        "message": "Transcription completed",
+        "detected_language": "de",
+        "transcript_length_chars": 319,
+        "result": " Sehr geehrte Damen und Herren, bitte beachten Sie das Rauchverbot in unseren Terminens. Das Rauchen ist nur in den ausgewiesenen Raucherbereichen gestattet. Vielen Dank. Your attention please. Please do not smoke in the terminal building. Smoking is only permitted in the specified smoking areas. Thank you. Thank you."
+      },
+      {
+        "step": "TEXT_PROCESSING",
+        "status": "INFO",
+        "message": "Starting text processing and summarization"
+      },
+      {
+        "step": "TEXT_CHUNKING",
+        "status": "SUCCESS",
+        "message": "Text split into chunks",
+        "num_chunks": 1,
+        "chunk_size": 2000
+      },
+      {
+        "step": "CLUSTERING",
+        "status": "INFO",
+        "message": "Single chunk - no clustering needed"
+      },
+      {
+        "step": "SUMMARIZATION",
+        "status": "INFO",
+        "message": "Generating comprehensive summary"
+      },
+      {
+        "step": "SUMMARIZATION",
+        "status": "SUCCESS",
+        "message": "Final summary generated",
+        "summary_length_chars": 119,
+        "cluster_summaries": [
+          "In den Terminals ist das Rauchen verboten und nur in den ausgewiesenen Raucherbereichen erlaubt.\n"
+        ],
+        "summary": "Das Rauchen ist in den Terminals grundsätzlich verboten und nur in den dafür ausgewiesenen Raucherbereichen gestattet.\n"
+      },
+      {
+        "step": "PIPELINE_COMPLETE",
+        "status": "SUCCESS",
+        "message": "Audio/video processing pipeline completed successfully"
+      }
+    ]
+  },
+  {
+    "run_id": 2,
+    "logs": [
+      {
+        "step": "INITIALIZATION",
+        "status": "INFO",
+        "message": "Starting audio/video processing pipeline",
+        "input_file": "data\\audio\\AirportAnnouncement_noise.wav",
+        "transcriber_model": "small",
+        "denoise_enabled": true,
+        "aggressive_denoise": false
+      },
+      {
+        "step": "FILE_VALIDATION",
+        "status": "SUCCESS",
+        "message": "Input file validated",
+        "file_type": ".wav"
+      },
+      {
+        "step": "AUDIO_CONVERSION",
+        "status": "INFO",
+        "message": "Starting audio format standardization"
+      },
+      {
+        "step": "AUDIO_PROCESSING",
+        "status": "INFO",
+        "message": "Processing audio file: 'AirportAnnouncement_noise.wav'"
+      },
+      {
+        "step": "AUDIO_PROCESSING",
+        "status": "INFO",
+        "message": "Using WAV file directly: AirportAnnouncement_noise.wav"
+      },
+      {
+        "step": "AUDIO_ENHANCEMENT",
+        "status": "INFO",
+        "message": "Starting audio enhancement",
+        "aggressive_mode": false
+      },
+      {
+        "step": "AUDIO_ENHANCEMENT",
+        "status": "SUCCESS",
+        "message": "Audio enhancement completed"
+      },
+      {
+        "step": "MODEL_INIT",
+        "status": "INFO",
+        "message": "Initializing AI models"
+      },
+      {
+        "step": "MODEL_INIT",
+        "status": "SUCCESS",
+        "message": "AI models initialized successfully"
+      },
+      {
+        "step": "TRANSCRIPTION",
+        "status": "INFO",
+        "message": "Starting transcription of: AirportAnnouncement_noise_enhanced.wav"
+      },
+      {
+        "step": "TRANSCRIPTION",
+        "status": "SUCCESS",
+        "message": "Transcription completed",
+        "detected_language": "de",
+        "transcript_length_chars": 319,
+        "result": " Sehr geehrte Damen und Herren, bitte beachten Sie das Rauchverbot in unseren Terminens. Das Rauchen ist nur in den ausgewiesenen Raucherbereichen gestattet. Vielen Dank. Your attention please. Please do not smoke in the terminal building. Smoking is only permitted in the specified smoking areas. Thank you. Thank you."
+      },
+      {
+        "step": "TEXT_PROCESSING",
+        "status": "INFO",
+        "message": "Starting text processing and summarization"
+      },
+      {
+        "step": "TEXT_CHUNKING",
+        "status": "SUCCESS",
+        "message": "Text split into chunks",
+        "num_chunks": 1,
+        "chunk_size": 2000
+      },
+      {
+        "step": "CLUSTERING",
+        "status": "INFO",
+        "message": "Single chunk - no clustering needed"
+      },
+      {
+        "step": "SUMMARIZATION",
+        "status": "INFO",
+        "message": "Generating comprehensive summary"
+      },
+      {
+        "step": "SUMMARIZATION",
+        "status": "SUCCESS",
+        "message": "Final summary generated",
+        "summary_length_chars": 135,
+        "cluster_summaries": [
+          "Das Rauchen ist im Terminalgebäude nicht erlaubt, sondern nur in den dafür vorgesehenen Raucherbereichen.\n"
+        ],
+        "summary": "Im gesamten Terminalgebäude ist das Rauchen untersagt. Es ist ausschließlich in den speziell ausgewiesenen Raucherbereichen gestattet.\n"
+      },
+      {
+        "step": "PIPELINE_COMPLETE",
+        "status": "SUCCESS",
+        "message": "Audio/video processing pipeline completed successfully"
+      }
+    ]
+  }
+]

@@ -1,5 +1,4 @@
 import os
-import time
 import argparse
 from pathlib import Path
 from dotenv import load_dotenv
@@ -7,7 +6,10 @@ from dotenv import load_dotenv
 from pipelines.converter import convert_video_to_audio, convert_audio_format
 from pipelines.transcriber import Transcriber
 from pipelines.summarizer import Summarizer
-from pipelines.preprocessor import enhance_audio, convert_to_wav
+from pipelines.preprocessor import enhance_audio
+from helper import JSONLogger
+
+load_dotenv()
 
 LANGUAGES = {
     "en": "english", "zh": "chinese", "de": "german", "es": "spanish", "ru": "russian",
@@ -31,8 +33,6 @@ LANGUAGES = {
     "mg": "malagasy", "as": "assamese", "tt": "tatar", "haw": "hawaiian", "ln": "lingala",
     "ha": "hausa", "ba": "bashkir", "jw": "javanese", "su": "sundanese", "yue": "cantonese",
 }
-
-load_dotenv()
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -58,101 +58,123 @@ def parse_args():
 if __name__ == "__main__":
     args = parse_args()
     input_file = Path(args.file)
+
+    logger = JSONLogger()
     audio_path = None
 
-    if not input_file.exists():
-        print(f"file not found: {input_file}")
-        exit(1)
+    logger.log("INITIALIZATION", "INFO", "Starting audio/video processing pipeline", 
+               input_file=str(input_file), 
+               transcriber_model=args.transcriber_model,
+               denoise_enabled=args.denoise,
+               aggressive_denoise=args.aggressive_denoise)
 
-    print("Audio Format Standardization")
+    if not input_file.exists():
+        logger.log("FILE_VALIDATION", "ERROR", f"Input file not found: {input_file}")
+        exit(1)
+    
+    logger.log("FILE_VALIDATION", "SUCCESS", "Input file validated", file_type=input_file.suffix.lower())
+    logger.log("AUDIO_CONVERSION", "INFO", "Starting audio format standardization")
+    
     if input_file.suffix.lower() == ".mp4":
-        print(f"Processing video file: '{input_file.name}'")
+        logger.log("VIDEO_PROCESSING", "INFO", f"Processing video file: '{input_file.name}'")
         output_dir = Path("./data/audio")
         audio_path = output_dir / f"{input_file.stem}.wav"
         result = convert_video_to_audio(input_file, audio_path)
+
         if result is None:
-            print("Video conversion failed.")
+            logger.log("VIDEO_PROCESSING", "ERROR", "Video conversion failed")
             exit(1)
+        logger.log("VIDEO_PROCESSING", "SUCCESS", "Video converted to audio", output_file=str(audio_path))
+
     elif input_file.suffix.lower() in [".mp3", ".wav", ".m4a", ".flac", ".ogg"]:
-        print(f"Processing audio file: '{input_file.name}'")
+        logger.log("AUDIO_PROCESSING", "INFO", f"Processing audio file: '{input_file.name}'")
         if input_file.suffix.lower() != ".wav" or args.force_wav:
-            # Convert to standardized WAV format
             output_dir = Path("./data/audio")
             output_dir.mkdir(parents=True, exist_ok=True)
             audio_path = output_dir / f"{input_file.stem}_standardized.wav"
             result = convert_audio_format(input_file, audio_path)
             if result is None:
-                print("Audio format conversion failed. Using original file.")
+                logger.log("AUDIO_PROCESSING", "WARNING", "Audio format conversion failed. Using original file.")
                 audio_path = input_file
+            else:
+                logger.log("AUDIO_PROCESSING", "SUCCESS", "Audio format standardized", output_file=str(audio_path))
         else:
             audio_path = input_file
-            print(f"Using WAV file directly: {audio_path.name}")
+            logger.log("AUDIO_PROCESSING", "INFO", f"Using WAV file directly: {audio_path.name}")
     else:
-        print(f"Unsupported file type: '{input_file.suffix}'")
-        print("Supported formats: .mp4, .mp3, .wav, .m4a, .flac, .ogg")
+        logger.log("FILE_VALIDATION", "ERROR", f"Unsupported file type: '{input_file.suffix}'", supported_formats=[".mp4", ".mp3", ".wav", ".m4a", ".flac", ".ogg"])
         exit(1)
     
     # Audio Enhancement (if requested)
     if args.denoise or args.aggressive_denoise:
-        print(f"Audio Enhancement")
+        logger.log("AUDIO_ENHANCEMENT", "INFO", "Starting audio enhancement", aggressive_mode=args.aggressive_denoise)
+        
         enhanced_audio_path = enhance_audio(audio_path, aggressive_mode=args.aggressive_denoise)
         if enhanced_audio_path:
             audio_path = enhanced_audio_path
-            print("Audio enhancement completed successfully")
+            logger.log("AUDIO_ENHANCEMENT", "SUCCESS", "Audio enhancement completed")
         else:
-            print("Audio enhancement failed. Proceeding with original audio.")
+            logger.log("AUDIO_ENHANCEMENT", "ERROR", "Audio enhancement failed. Proceeding with original audio.")
     else:
-        print("\nAudio Enhancement (Skipped)")
-        print("Use --denoise for adaptive noise reduction or --aggressive-denoise for maximum noise reduction")
+        logger.log("AUDIO_ENHANCEMENT", "INFO", "Audio enhancement skipped by user choice")
 
     # Initialize AI Models
-    print(f"AI Model Initialization")
+    logger.log("MODEL_INIT", "INFO", "Initializing AI models")
+    
     try:
         transcriber = Transcriber(model_name=args.transcriber_model) 
         summarizer = Summarizer(gemini_api_key=os.getenv("GOOGLE_API_KEY"))
-        print("AI models initialized successfully")
+        logger.log("MODEL_INIT", "SUCCESS", "AI models initialized successfully")
     except Exception as e:
-        print(f"Initialization error: {e}")
+        logger.log("MODEL_INIT", "ERROR", f"Initialization error: {e}")
         exit(1)
 
     # Transcribe audio to text
-    print(f"Audio Transcription")
-    print(f"Transcribing: {audio_path.name}")
+    logger.log("TRANSCRIPTION", "INFO", f"Starting transcription of: {audio_path.name}")
+
     transcription = transcriber.transcribe(audio_path, language=args.language)
     if transcription:
         result, language = transcription
-        print(f"Transcription completed (Language: {language})")
-        print(f"Transcript length: {len(result)} characters")
-        # Show first 200 characters as preview
-        # preview = result[:200] + "..." if len(result) > 200 else result
-        print(f'language: {language}')
-        print(result)
+        logger.log("TRANSCRIPTION", "SUCCESS", "Transcription completed",
+                   detected_language=language,
+                   transcript_length_chars=len(result),
+                   result=result)
     else:
-        print("Transcription failed.")
+        logger.log("TRANSCRIPTION", "ERROR", "Transcription failed")
         exit(1)
 
     # Text Processing and Summarization
-    print(f"Text Processing & Summarization")
+    logger.log("TEXT_PROCESSING", "INFO", "Starting text processing and summarization")
+    
     # Split text into chunks
     chunks = summarizer.chunk_text(result, args.chunk_size) 
-    print(f"Text split into {len(chunks)} chunks for processing")
+    logger.log("TEXT_CHUNKING", "SUCCESS", "Text split into chunks",
+               num_chunks=len(chunks),
+               chunk_size=args.chunk_size)
     
     if len(chunks) > 1:
-        # Cluster chunks by topic
-        print("Clustering chunks by topic...")
+        logger.log("CLUSTERING", "INFO", "Clustering chunks by topic")
         clusters = summarizer.cluster_chunks(chunks)
-        print(f"Organized into {len(clusters)} topic clusters")
+        logger.log("CLUSTERING", "SUCCESS", "Topic clustering completed",
+                   num_clusters=len(clusters))
     else:
-        clusters = {0: chunks}  # If only one chunk, assign to single cluster
-        print("Single chunk - no clustering needed")
+        clusters = {0: chunks}
+        logger.log("CLUSTERING", "INFO", "Single chunk - no clustering needed")
 
     # Generate Final Summary
-    print(f"Final Summary Generation")
-    print("Generating comprehensive summary...")
-    final_summary = summarizer.get_final_summary(clusters, language=language)
+    logger.log("SUMMARIZATION", "INFO", "Generating comprehensive summary")
+
+    cluster_summaries, final_summary = summarizer.get_final_summary(clusters, language=language)
+    logger.log("SUMMARIZATION", "SUCCESS", "Final summary generated",
+               summary_length_chars=len(final_summary),
+               cluster_summaries=cluster_summaries,
+               summary=final_summary)
+
+    logger.log("PIPELINE_COMPLETE", "SUCCESS", "Audio/video processing pipeline completed successfully")
     
     print("\n" + "="*60)
     print("FINAL SUMMARY")
     print("="*60)
     print(final_summary)
     print("="*60)
+    logger.save()

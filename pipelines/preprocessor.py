@@ -4,29 +4,7 @@ import librosa #https://librosa.org/doc/latest/index.html, https://github.com/li
 import numpy as np
 from pathlib import Path
 from scipy import signal
-
-def convert_to_wav(input_path: Path, target_sr: int = 16000):
-    """
-    Convert any audio format to WAV with consistent sample rate.
-    This ensures all audio is in the best format for processing.
-    """
-    try:
-        # Load audio
-        data, sr = librosa.load(str(input_path), sr=target_sr, mono=True)
-        
-        # Create output directory
-        output_dir = input_path.parent / "converted"
-        output_dir.mkdir(parents=True, exist_ok=True)
-        output_path = output_dir / f"{input_path.stem}_converted.wav"
-        
-        # Save as WAV 
-        sf.write(str(output_path), data, target_sr, subtype='PCM_16')
-        print(f"Audio converted to WAV: {output_path}")
-        return output_path
-        
-    except Exception as e:
-        print(f"Error converting audio to WAV: {e}")
-        return input_path  # Return original if conversion fails
+from pipelines.converter import convert_audio_format
 
 def audio_quality(data: np.ndarray, sr: int) -> dict:
     """
@@ -83,9 +61,7 @@ def enhance_audio_adaptive(data: np.ndarray, sr: int, quality_info: dict) -> np.
             y=data, 
             sr=sr, 
             prop_decrease=0.9,  # More aggressive
-            stationary=False,   # Handle non-stationary noise
-            n_grad_freq=3,      # More frequency bands for analysis
-            n_grad_time=5       # More time frames for analysis
+            stationary=False    # Handle non-stationary noise
         )
         
         # Stage 3: Additional spectral subtraction for residual noise
@@ -104,8 +80,6 @@ def enhance_audio_adaptive(data: np.ndarray, sr: int, quality_info: dict) -> np.
             sr=sr, 
             prop_decrease=0.7,
             stationary=False,
-            n_grad_freq=2,
-            n_grad_time=3
         )
         
     else:  # high quality
@@ -143,7 +117,7 @@ def enhance_audio(input_path: Path, aggressive_mode: bool = False):
         # First, ensure audio is in WAV format with consistent sample rate
         if input_path.suffix.lower() != '.wav':
             print(f"Converting {input_path.name} to WAV format...")
-            wav_path = convert_to_wav(input_path)
+            wav_path = convert_audio_format(input_path)
         else:
             wav_path = input_path
         

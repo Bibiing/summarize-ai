@@ -86,7 +86,7 @@ class Summarizer:
         )
         try:
             final_response = self.gemini_model.generate_content(final_prompt)
-            return final_response.text
+            return cluster_summaries, final_response.text
         except Exception as e:
             print(f"Failed to create final summary. Error: {e}")
-            return "Failed to generate final summary."
+            return cluster_summaries, "Failed to generate final summary."
