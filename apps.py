@@ -98,9 +98,9 @@ if __name__ == "__main__":
         enhanced_audio_path = enhance_audio(audio_path, aggressive_mode=args.aggressive_denoise)
         if enhanced_audio_path:
             audio_path = enhanced_audio_path
-            print("✓ Audio enhancement completed successfully")
+            print("Audio enhancement completed successfully")
         else:
-            print("⚠ Audio enhancement failed. Proceeding with original audio.")
+            print("Audio enhancement failed. Proceeding with original audio.")
     else:
         print("\nAudio Enhancement (Skipped)")
         print("Use --denoise for adaptive noise reduction or --aggressive-denoise for maximum noise reduction")
@@ -121,10 +121,11 @@ if __name__ == "__main__":
     transcription = transcriber.transcribe(audio_path, language=args.language)
     if transcription:
         result, language = transcription
-        print(f"✓ Transcription completed (Language: {language})")
+        print(f"Transcription completed (Language: {language})")
         print(f"Transcript length: {len(result)} characters")
         # Show first 200 characters as preview
         # preview = result[:200] + "..." if len(result) > 200 else result
+        print(f'language: {language}')
         print(result)
     else:
         print("Transcription failed.")
