@@ -4,7 +4,7 @@ import librosa #https://librosa.org/doc/latest/index.html, https://github.com/li
 import numpy as np
 from pathlib import Path
 from scipy import signal
-from pipelines.converter import convert_audio_format
+from app.pipelines.converter import convert_audio_format
 
 def audio_quality(data: np.ndarray, sr: int) -> dict:
     """

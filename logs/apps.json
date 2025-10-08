@@ -210,5 +210,107 @@
         "message": "Audio/video processing pipeline completed successfully"
       }
     ]
+  },
+  {
+    "run_id": 3,
+    "logs": [
+      {
+        "step": "INITIALIZATION",
+        "status": "INFO",
+        "message": "Starting audio/video processing pipeline",
+        "input_file": "data\\temp\\73d9cdba-75b0-4dbc-a5b4-8bf02a8b56c5_AirportAnnouncement_noise.wav",
+        "transcriber_model": "small",
+        "denoise_enabled": true,
+        "aggressive_denoise": true
+      },
+      {
+        "step": "FILE_VALIDATION",
+        "status": "SUCCESS",
+        "message": "Input file validated",
+        "file_type": ".wav"
+      },
+      {
+        "step": "AUDIO_CONVERSION",
+        "status": "INFO",
+        "message": "Starting audio format standardization"
+      },
+      {
+        "step": "AUDIO_PROCESSING",
+        "status": "INFO",
+        "message": "Processing audio file: '73d9cdba-75b0-4dbc-a5b4-8bf02a8b56c5_AirportAnnouncement_noise.wav'"
+      },
+      {
+        "step": "AUDIO_PROCESSING",
+        "status": "SUCCESS",
+        "message": "Audio format standardized",
+        "output_file": "data\\audio\\73d9cdba-75b0-4dbc-a5b4-8bf02a8b56c5_AirportAnnouncement_noise_standardized.wav"
+      },
+      {
+        "step": "AUDIO_ENHANCEMENT",
+        "status": "INFO",
+        "message": "Starting audio enhancement",
+        "aggressive_mode": true
+      },
+      {
+        "step": "AUDIO_ENHANCEMENT",
+        "status": "SUCCESS",
+        "message": "Audio enhancement completed"
+      },
+      {
+        "step": "MODEL_INIT",
+        "status": "INFO",
+        "message": "Initializing AI models"
+      },
+      {
+        "step": "MODEL_INIT",
+        "status": "SUCCESS",
+        "message": "AI models initialized successfully"
+      },
+      {
+        "step": "TRANSCRIPTION",
+        "status": "INFO",
+        "message": "Starting transcription of: 73d9cdba-75b0-4dbc-a5b4-8bf02a8b56c5_AirportAnnouncement_noise_standardized_enhanced.wav"
+      },
+      {
+        "step": "TRANSCRIPTION",
+        "status": "SUCCESS",
+        "message": "Transcription completed",
+        "detected_language": "de",
+        "transcript_length_chars": 319
+      },
+      {
+        "step": "TEXT_PROCESSING",
+        "status": "INFO",
+        "message": "Starting text processing and summarization"
+      },
+      {
+        "step": "TEXT_CHUNKING",
+        "status": "SUCCESS",
+        "message": "Text split into chunks",
+        "num_chunks": 1,
+        "chunk_size": 2000
+      },
+      {
+        "step": "CLUSTERING",
+        "status": "INFO",
+        "message": "Single chunk - no clustering needed"
+      },
+      {
+        "step": "SUMMARIZATION",
+        "status": "INFO",
+        "message": "Generating comprehensive summary"
+      },
+      {
+        "step": "SUMMARIZATION",
+        "status": "SUCCESS",
+        "message": "Final summary generated",
+        "summary_length_chars": 132
+      },
+      {
+        "step": "PIPELINE_COMPLETE",
+        "status": "SUCCESS",
+        "message": "Pipeline completed successfully"
+      }
+    ]
   }
 ]
