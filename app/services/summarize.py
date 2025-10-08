@@ -78,6 +78,7 @@ def run_pipeline(
     else:
         logger.log("AUDIO_ENHANCEMENT", "INFO", "Audio enhancement skipped by user choice")
 
+    # transcription and summarization api calls
     logger.log("MODEL_INIT", "INFO", "Initializing AI models")
     try:
         transcriber = Transcriber(model_name=transcriber_model)
@@ -90,6 +91,7 @@ def run_pipeline(
     if language is not None and language.strip().lower() in ["", "none", "string"]:
         language = None
 
+    # transcription 
     logger.log("TRANSCRIPTION", "INFO", f"Starting transcription of: {audio_path.name}")
     transcription = transcriber.transcribe(audio_path, language=language)
     if transcription:
@@ -101,12 +103,14 @@ def run_pipeline(
         logger.log("TRANSCRIPTION", "ERROR", "Transcription failed")
         return {"error": "Transcription failed"}
 
+    # chunking 
     logger.log("TEXT_PROCESSING", "INFO", "Starting text processing and summarization")
     chunks = summarizer.chunk_text(result, chunk_size)
     logger.log("TEXT_CHUNKING", "SUCCESS", "Text split into chunks",
                num_chunks=len(chunks),
                chunk_size=chunk_size)
 
+    # clustering
     if len(chunks) > 1:
         logger.log("CLUSTERING", "INFO", "Clustering chunks by topic")
         clusters = summarizer.cluster_chunks(chunks)
@@ -116,6 +120,7 @@ def run_pipeline(
         clusters = {0: chunks}
         logger.log("CLUSTERING", "INFO", "Single chunk - no clustering needed")
 
+    #summarization
     logger.log("SUMMARIZATION", "INFO", "Generating comprehensive summary")
     cluster_summaries, final_summary = summarizer.get_final_summary(clusters, language=detected_language)
     logger.log("SUMMARIZATION", "SUCCESS", "Final summary generated",
@@ -123,6 +128,16 @@ def run_pipeline(
 
     logger.log("PIPELINE_COMPLETE", "SUCCESS", "Pipeline completed successfully")
     logger.save()
+
+    temp_folders  = [Path("data/audio/enhanced"), Path("data/temp"), Path("data/audio")]
+    for folder in temp_folders:
+        try:
+            if folder.exists():
+                for file in folder.rglob("*"):
+                    if file.is_file():
+                        file.unlink()
+        except Exception as e:
+            logger.log("CLEANUP", "WARNING", f"Failed to clean up {folder}: {e}")
 
     return {
         "summary": final_summary,

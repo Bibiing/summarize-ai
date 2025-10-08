@@ -19,7 +19,6 @@ async def process_file(
     chunk_size: int = Form(2000),
     language: str = Form(None)
 ):
-    # Simpan file sementara
     os.makedirs("data/temp", exist_ok=True)
     temp_filename = f"data/temp/{uuid.uuid4()}_{file.filename}"
     with open(temp_filename, "wb") as f:
