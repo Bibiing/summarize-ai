@@ -6,6 +6,7 @@ import shutil
 import uuid
 import os
 import json
+import tempfile
 
 router = APIRouter()
 
@@ -17,14 +18,15 @@ async def process_file(
     force_wav: bool = Form(False),
     transcriber_model: str = Form("small"),
     chunk_size: int = Form(2000),
-    language: str = Form(None)
-):
-    os.makedirs("data/temp", exist_ok=True)
-    temp_filename = f"data/temp/{uuid.uuid4()}_{file.filename}"
-    with open(temp_filename, "wb") as f:
-        shutil.copyfileobj(file.file, f)
-
+    language: Optional[str] = Form(None)
+):  
+    temp_dir = tempfile.gettempdir()
+    temp_filename = os.path.join(temp_dir, f"{uuid.uuid4()}_{file.filename}")
+    
     try:
+        with open(temp_filename, "wb") as f:
+            shutil.copyfileobj(file.file, f)
+
         result = run_pipeline(
             input_file=Path(temp_filename),
             denoise=denoise,
