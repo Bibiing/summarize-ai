@@ -38,13 +38,14 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 
 def parse_args():
     parser = argparse.ArgumentParser(description='AI Audio/Video Summarizer with Advanced Noise Reduction', formatter_class=argparse.RawTextHelpFormatter)
-    parser.add_argument('--file', default="data/" , type=str, required=True, help='Path to the audio/video file')
+    parser.add_argument('--file', default="data/video/tes.mp4" , type=str, required=True, help='Path to the audio/video file')
     parser.add_argument('--denoise', action='store_true', help='Enable adaptive audio noise reduction before transcription')
     parser.add_argument('--aggressive-denoise', action='store_true', help='Enable aggressive noise reduction for very poor quality audio')
     parser.add_argument('--force-wav', action='store_true', help='Force conversion to WAV format even if input is already WAV')
     parser.add_argument('--transcriber-model', default="small", type=str, help='Whisper model size: tiny, base, small, medium, large')
     parser.add_argument('--chunk_size', default=2000, type=int, help='Chunk size for text splitting during summarization (default: 2000 characters)')
-    
+    parser.add_argument('--parallel', action=argparse.BooleanOptionalAction, default=True, help='Enable parallel processing for noise reduction.')
+
     language_list = "\n".join([f"  {code:<5} : {name}" for code, name in sorted(LANGUAGES.items())])
     language_help = (
         "Force transcription language.\n"
@@ -107,9 +108,9 @@ if __name__ == "__main__":
     
     # Audio Enhancement (if requested)
     if args.denoise or args.aggressive_denoise:
-        logger.log("AUDIO_ENHANCEMENT", "INFO", "Starting audio enhancement", aggressive_mode=args.aggressive_denoise)
-        
-        enhanced_audio_path = enhance_audio(audio_path, aggressive_mode=args.aggressive_denoise)
+        logger.log("AUDIO_ENHANCEMENT", "INFO", "Starting audio enhancement", aggressive_mode=args.aggressive_denoise, use_parallel=args.parallel)
+
+        enhanced_audio_path = enhance_audio(audio_path, aggressive_mode=args.aggressive_denoise, use_parallel=args.parallel)
         if enhanced_audio_path:
             audio_path = enhanced_audio_path
             logger.log("AUDIO_ENHANCEMENT", "SUCCESS", "Audio enhancement completed")

@@ -1,18 +1,22 @@
-import soundfile as sf # https://pypi.org/project/soundfile/ for reading/writing WAV files
-import noisereduce as nr # https://github.com/timsainb/noisereduce
-import librosa #https://librosa.org/doc/latest/index.html, https://github.com/librosa/librosa,  python package for music and audio analysis
+import soundfile as sf
+import noisereduce as nr
+import librosa
 import numpy as np
 from pathlib import Path
 from scipy import signal
+from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
+from functools import partial
+import multiprocessing as mp
 from pipelines.converter import convert_audio_format
 
 def audio_quality(data: np.ndarray, sr: int) -> dict:
     """
     Assess audio quality to determine optimal enhancement parameters.
     """
-    spectral_rolloff = librosa.feature.spectral_rolloff(y=data, sr=sr)[0] # Seberapa tinggi frekuensi dominan → indikator clarity.
-    zcr = librosa.feature.zero_crossing_rate(data)[0] # Berapa sering sinyal melewati nol → indikator noise.
-    rms_energy = librosa.feature.rms(y=data)[0] # Energi rata-rata → indikator volume/kekuatan sinyal.
+    # Run feature extraction sequentially. It's faster for these quick operations.
+    spectral_rolloff = librosa.feature.spectral_rolloff(y=data, sr=sr)[0]
+    zcr = librosa.feature.zero_crossing_rate(data)[0]
+    rms_energy = librosa.feature.rms(y=data)[0]
     
     # Simple quality assessment based on energy distribution
     avg_rolloff = np.mean(spectral_rolloff)
@@ -43,11 +47,75 @@ def apply_high_pass_filter(data: np.ndarray, sr: int, cutoff_freq: int = 80) -> 
     b, a = signal.butter(4, normalized_cutoff, btype='high')
     return signal.filtfilt(b, a, data)
 
-def enhance_audio_adaptive(data: np.ndarray, sr: int, quality_info: dict) -> np.ndarray:
+def _process_chunk(chunk: np.ndarray, sr: int, prop_decrease: float, stationary: bool) -> np.ndarray:
+    """
+    Helper function to process a single chunk of audio.
+    """
+    return nr.reduce_noise(
+        y=chunk,
+        sr=sr,
+        prop_decrease=prop_decrease,
+        stationary=stationary
+    )
+
+def parallel_noise_reduction(data: np.ndarray, sr: int, prop_decrease: float, stationary: bool, num_workers: int = None) -> np.ndarray:
+    """
+    Apply noise reduction in parallel chunks for faster processing.
+    """
+    if num_workers is None:
+        num_workers = max(1, mp.cpu_count() - 1)
+    
+    # For very short audio, don't split
+    if len(data) < sr * 2:  # Less than 2 seconds
+        return nr.reduce_noise(y=data, sr=sr, prop_decrease=prop_decrease, stationary=stationary)
+    
+    # Split audio into overlapping chunks
+    chunk_size = len(data) // num_workers
+    overlap = int(chunk_size * 0.1)  # 10% overlap to avoid artifacts
+    
+    chunks = []
+    chunk_indices = []
+    
+    for i in range(num_workers):
+        start = max(0, i * chunk_size - overlap)
+        end = min(len(data), (i + 1) * chunk_size + overlap)
+        chunks.append(data[start:end])
+        chunk_indices.append((start, end, overlap if i > 0 else 0))
+    
+    # Process chunks in parallel
+    process_func = partial(_process_chunk, sr=sr, prop_decrease=prop_decrease, stationary=stationary)
+    
+    with ProcessPoolExecutor(max_workers=num_workers) as executor:
+        processed_chunks = list(executor.map(process_func, chunks))
+    
+    # Merge chunks with crossfade
+    result = np.zeros_like(data)
+    for i, (chunk, (start, end, ovlp)) in enumerate(zip(processed_chunks, chunk_indices)):
+        if i == 0:
+            result[start:end] = chunk
+        else:
+            # Crossfade in overlap region
+            fade_start = start
+            fade_end = start + ovlp
+            fade = np.linspace(0, 1, ovlp)
+            
+            result[fade_start:fade_end] = (
+                result[fade_start:fade_end] * (1 - fade) + 
+                chunk[:ovlp] * fade
+            )
+            result[fade_end:end] = chunk[ovlp:]
+    
+    return result
+
+def enhance_audio_adaptive(data: np.ndarray, sr: int, quality_info: dict, 
+                          use_parallel: bool = True) -> np.ndarray:
     """
     Apply adaptive noise reduction based on audio quality assessment.
     """
     quality_level = quality_info["quality_level"]
+    
+    # Choose processing function
+    noise_reduce_func = parallel_noise_reduction if use_parallel else nr.reduce_noise
     
     if quality_level == "low":
         # Aggressive noise reduction for poor quality audio
@@ -57,39 +125,31 @@ def enhance_audio_adaptive(data: np.ndarray, sr: int, quality_info: dict) -> np.
         data = apply_high_pass_filter(data, sr, cutoff_freq=100)
         
         # Stage 2: Spectral gating noise reduction
-        data = nr.reduce_noise(
-            y=data, 
-            sr=sr, 
-            prop_decrease=0.9,  # More aggressive
-            stationary=False    # Handle non-stationary noise
-        )
+        if use_parallel:
+            data = parallel_noise_reduction(data, sr, prop_decrease=0.9, stationary=False)
+        else:
+            data = nr.reduce_noise(y=data, sr=sr, prop_decrease=0.9, stationary=False)
         
         # Stage 3: Additional spectral subtraction for residual noise
-        data = nr.reduce_noise(
-            y=data, 
-            sr=sr, 
-            prop_decrease=0.3,  # Lighter second pass
-            stationary=True
-        )
+        if use_parallel:
+            data = parallel_noise_reduction(data, sr, prop_decrease=0.3, stationary=True)
+        else:
+            data = nr.reduce_noise(y=data, sr=sr, prop_decrease=0.3, stationary=True)
         
     elif quality_level == "medium":
         # Moderate noise reduction
         data = apply_high_pass_filter(data, sr, cutoff_freq=80)
-        data = nr.reduce_noise(
-            y=data, 
-            sr=sr, 
-            prop_decrease=0.7,
-            stationary=False,
-        )
+        if use_parallel:
+            data = parallel_noise_reduction(data, sr, prop_decrease=0.7, stationary=False)
+        else:
+            data = nr.reduce_noise(y=data, sr=sr, prop_decrease=0.7, stationary=False)
         
     else:  # high quality
         # Light noise reduction to preserve quality
-        data = nr.reduce_noise(
-            y=data, 
-            sr=sr, 
-            prop_decrease=0.5,
-            stationary=True
-        )
+        if use_parallel:
+            data = parallel_noise_reduction(data, sr, prop_decrease=0.5, stationary=True)
+        else:
+            data = nr.reduce_noise(y=data, sr=sr, prop_decrease=0.5, stationary=True)
     
     return data
 
@@ -109,9 +169,14 @@ def normalize_audio(data: np.ndarray, target_level: float = -20.0) -> np.ndarray
     data = np.clip(data, -0.95, 0.95)
     return data
 
-def enhance_audio(input_path: Path, aggressive_mode: bool = False):
+def enhance_audio(input_path: Path, aggressive_mode: bool = False, use_parallel: bool = True):
     """
     Enhanced audio preprocessing with quality assessment and adaptive processing.
+    
+    Args:
+        input_path: Path to input audio file
+        aggressive_mode: Force maximum noise reduction
+        use_parallel: Enable parallel processing (default: True)
     """
     try:
         # First, ensure audio is in WAV format with consistent sample rate
@@ -130,6 +195,8 @@ def enhance_audio(input_path: Path, aggressive_mode: bool = False):
         
         print(f"Processing audio: {wav_path.name}")
         print(f"Sample rate: {rate} Hz, Duration: {len(data)/rate:.2f} seconds")
+        if use_parallel:
+            print(f"Parallel processing enabled with {max(1, mp.cpu_count() - 1)} workers")
         
         # Assess audio quality
         quality_info = audio_quality(data, rate)
@@ -143,7 +210,7 @@ def enhance_audio(input_path: Path, aggressive_mode: bool = False):
             quality_info["quality_level"] = "low"
             print("Aggressive mode enabled - applying maximum noise reduction")
         
-        enhanced_data = enhance_audio_adaptive(data, rate, quality_info)
+        enhanced_data = enhance_audio_adaptive(data, rate, quality_info, use_parallel=use_parallel)
         
         # Normalize audio level
         enhanced_data = normalize_audio(enhanced_data)
