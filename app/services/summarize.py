@@ -35,7 +35,7 @@ def run_pipeline(
     logger.log("FILE_VALIDATION", "SUCCESS", "Input file validated", file_type=input_file.suffix.lower())
     logger.log("AUDIO_CONVERSION", "INFO", "Starting audio format standardization")
     
-    if input_file.suffix.lower() == ".mp4":
+    if input_file.suffix.lower() in ["mkv", ".mp4"]:
         logger.log("VIDEO_PROCESSING", "INFO", f"Processing video file: '{input_file.name}'")
         output_dir = Path("./data/audio")
         output_dir.mkdir(parents=True, exist_ok=True)

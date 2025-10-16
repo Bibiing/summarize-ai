@@ -1,0 +1,206 @@
+[
+  {
+    "run_id": 1,
+    "logs": [
+      {
+        "step": "INITIALIZATION",
+        "status": "INFO",
+        "message": "Starting audio/video processing pipeline",
+        "input_file": "C:\\Users\\Nabil\\AppData\\Local\\Temp\\85f5697f-18e9-4eaf-9151-05558d421583_Tugas1 PBKK.mp4",
+        "transcriber_model": "small",
+        "denoise_enabled": false,
+        "aggressive_denoise": false
+      },
+      {
+        "step": "FILE_VALIDATION",
+        "status": "SUCCESS",
+        "message": "Input file validated",
+        "file_type": ".mp4"
+      },
+      {
+        "step": "AUDIO_CONVERSION",
+        "status": "INFO",
+        "message": "Starting audio format standardization"
+      },
+      {
+        "step": "VIDEO_PROCESSING",
+        "status": "INFO",
+        "message": "Processing video file: '85f5697f-18e9-4eaf-9151-05558d421583_Tugas1 PBKK.mp4'"
+      },
+      {
+        "step": "VIDEO_PROCESSING",
+        "status": "SUCCESS",
+        "message": "Video converted to audio",
+        "output_file": "data\\audio\\85f5697f-18e9-4eaf-9151-05558d421583_Tugas1 PBKK.wav"
+      },
+      {
+        "step": "AUDIO_ENHANCEMENT",
+        "status": "INFO",
+        "message": "Audio enhancement skipped by user choice"
+      },
+      {
+        "step": "MODEL_INIT",
+        "status": "INFO",
+        "message": "Initializing AI models"
+      },
+      {
+        "step": "MODEL_INIT",
+        "status": "SUCCESS",
+        "message": "AI models initialized successfully"
+      },
+      {
+        "step": "TRANSCRIPTION",
+        "status": "INFO",
+        "message": "Starting transcription of: 85f5697f-18e9-4eaf-9151-05558d421583_Tugas1 PBKK.wav"
+      },
+      {
+        "step": "TRANSCRIPTION",
+        "status": "SUCCESS",
+        "message": "Transcription completed",
+        "detected_language": "id",
+        "transcript_length_chars": 4048
+      },
+      {
+        "step": "TEXT_PROCESSING",
+        "status": "INFO",
+        "message": "Starting text processing and summarization"
+      },
+      {
+        "step": "TEXT_CHUNKING",
+        "status": "SUCCESS",
+        "message": "Text split into chunks",
+        "num_chunks": 3,
+        "chunk_size": 2000
+      },
+      {
+        "step": "CLUSTERING",
+        "status": "INFO",
+        "message": "Clustering chunks by topic"
+      },
+      {
+        "step": "CLUSTERING",
+        "status": "SUCCESS",
+        "message": "Topic clustering completed",
+        "num_clusters": 0
+      },
+      {
+        "step": "SUMMARIZATION",
+        "status": "INFO",
+        "message": "Generating comprehensive summary"
+      },
+      {
+        "step": "SUMMARIZATION",
+        "status": "SUCCESS",
+        "message": "Final summary generated",
+        "summary_length_chars": 33
+      },
+      {
+        "step": "PIPELINE_COMPLETE",
+        "status": "SUCCESS",
+        "message": "Pipeline completed successfully"
+      }
+    ]
+  },
+  {
+    "run_id": 2,
+    "logs": [
+      {
+        "step": "INITIALIZATION",
+        "status": "INFO",
+        "message": "Starting audio/video processing pipeline",
+        "input_file": "C:\\Users\\Nabil\\AppData\\Local\\Temp\\b65ca8be-8168-42ea-b215-e52aa01ac575_Tugas1 PBKK.mp4",
+        "transcriber_model": "small",
+        "denoise_enabled": false,
+        "aggressive_denoise": false
+      },
+      {
+        "step": "FILE_VALIDATION",
+        "status": "SUCCESS",
+        "message": "Input file validated",
+        "file_type": ".mp4"
+      },
+      {
+        "step": "AUDIO_CONVERSION",
+        "status": "INFO",
+        "message": "Starting audio format standardization"
+      },
+      {
+        "step": "VIDEO_PROCESSING",
+        "status": "INFO",
+        "message": "Processing video file: 'b65ca8be-8168-42ea-b215-e52aa01ac575_Tugas1 PBKK.mp4'"
+      },
+      {
+        "step": "VIDEO_PROCESSING",
+        "status": "SUCCESS",
+        "message": "Video converted to audio",
+        "output_file": "data\\audio\\b65ca8be-8168-42ea-b215-e52aa01ac575_Tugas1 PBKK.wav"
+      },
+      {
+        "step": "AUDIO_ENHANCEMENT",
+        "status": "INFO",
+        "message": "Audio enhancement skipped by user choice"
+      },
+      {
+        "step": "MODEL_INIT",
+        "status": "INFO",
+        "message": "Initializing AI models"
+      },
+      {
+        "step": "MODEL_INIT",
+        "status": "SUCCESS",
+        "message": "AI models initialized successfully"
+      },
+      {
+        "step": "TRANSCRIPTION",
+        "status": "INFO",
+        "message": "Starting transcription of: b65ca8be-8168-42ea-b215-e52aa01ac575_Tugas1 PBKK.wav"
+      },
+      {
+        "step": "TRANSCRIPTION",
+        "status": "SUCCESS",
+        "message": "Transcription completed",
+        "detected_language": "id",
+        "transcript_length_chars": 4048
+      },
+      {
+        "step": "TEXT_PROCESSING",
+        "status": "INFO",
+        "message": "Starting text processing and summarization"
+      },
+      {
+        "step": "TEXT_CHUNKING",
+        "status": "SUCCESS",
+        "message": "Text split into chunks",
+        "num_chunks": 3,
+        "chunk_size": 2000
+      },
+      {
+        "step": "CLUSTERING",
+        "status": "INFO",
+        "message": "Clustering chunks by topic"
+      },
+      {
+        "step": "CLUSTERING",
+        "status": "SUCCESS",
+        "message": "Topic clustering completed",
+        "num_clusters": 0
+      },
+      {
+        "step": "SUMMARIZATION",
+        "status": "INFO",
+        "message": "Generating comprehensive summary"
+      },
+      {
+        "step": "SUMMARIZATION",
+        "status": "SUCCESS",
+        "message": "Final summary generated",
+        "summary_length_chars": 33
+      },
+      {
+        "step": "PIPELINE_COMPLETE",
+        "status": "SUCCESS",
+        "message": "Pipeline completed successfully"
+      }
+    ]
+  }
+]
