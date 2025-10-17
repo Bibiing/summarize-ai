@@ -6,218 +6,6 @@
         "step": "INITIALIZATION",
         "status": "INFO",
         "message": "Starting audio/video processing pipeline",
-        "input_file": "data\\audio\\AirportAnnouncement_noise.wav",
-        "transcriber_model": "small",
-        "denoise_enabled": true,
-        "aggressive_denoise": false
-      },
-      {
-        "step": "FILE_VALIDATION",
-        "status": "SUCCESS",
-        "message": "Input file validated",
-        "file_type": ".wav"
-      },
-      {
-        "step": "AUDIO_CONVERSION",
-        "status": "INFO",
-        "message": "Starting audio format standardization"
-      },
-      {
-        "step": "AUDIO_PROCESSING",
-        "status": "INFO",
-        "message": "Processing audio file: 'AirportAnnouncement_noise.wav'"
-      },
-      {
-        "step": "AUDIO_PROCESSING",
-        "status": "INFO",
-        "message": "Using WAV file directly: AirportAnnouncement_noise.wav"
-      },
-      {
-        "step": "AUDIO_ENHANCEMENT",
-        "status": "INFO",
-        "message": "Starting audio enhancement",
-        "aggressive_mode": false
-      },
-      {
-        "step": "AUDIO_ENHANCEMENT",
-        "status": "SUCCESS",
-        "message": "Audio enhancement completed"
-      },
-      {
-        "step": "MODEL_INIT",
-        "status": "INFO",
-        "message": "Initializing AI models"
-      },
-      {
-        "step": "MODEL_INIT",
-        "status": "SUCCESS",
-        "message": "AI models initialized successfully"
-      },
-      {
-        "step": "TRANSCRIPTION",
-        "status": "INFO",
-        "message": "Starting transcription of: AirportAnnouncement_noise_enhanced.wav"
-      },
-      {
-        "step": "TRANSCRIPTION",
-        "status": "SUCCESS",
-        "message": "Transcription completed",
-        "detected_language": "de",
-        "transcript_length_chars": 319,
-        "result": " Sehr geehrte Damen und Herren, bitte beachten Sie das Rauchverbot in unseren Terminens. Das Rauchen ist nur in den ausgewiesenen Raucherbereichen gestattet. Vielen Dank. Your attention please. Please do not smoke in the terminal building. Smoking is only permitted in the specified smoking areas. Thank you. Thank you."
-      },
-      {
-        "step": "TEXT_PROCESSING",
-        "status": "INFO",
-        "message": "Starting text processing and summarization"
-      },
-      {
-        "step": "TEXT_CHUNKING",
-        "status": "SUCCESS",
-        "message": "Text split into chunks",
-        "num_chunks": 1,
-        "chunk_size": 2000
-      },
-      {
-        "step": "CLUSTERING",
-        "status": "INFO",
-        "message": "Single chunk - no clustering needed"
-      },
-      {
-        "step": "SUMMARIZATION",
-        "status": "INFO",
-        "message": "Generating comprehensive summary"
-      },
-      {
-        "step": "SUMMARIZATION",
-        "status": "SUCCESS",
-        "message": "Final summary generated",
-        "summary_length_chars": 119,
-        "cluster_summaries": [
-          "In den Terminals ist das Rauchen verboten und nur in den ausgewiesenen Raucherbereichen erlaubt.\n"
-        ],
-        "summary": "Das Rauchen ist in den Terminals grundsätzlich verboten und nur in den dafür ausgewiesenen Raucherbereichen gestattet.\n"
-      },
-      {
-        "step": "PIPELINE_COMPLETE",
-        "status": "SUCCESS",
-        "message": "Audio/video processing pipeline completed successfully"
-      }
-    ]
-  },
-  {
-    "run_id": 2,
-    "logs": [
-      {
-        "step": "INITIALIZATION",
-        "status": "INFO",
-        "message": "Starting audio/video processing pipeline",
-        "input_file": "data\\audio\\AirportAnnouncement_noise.wav",
-        "transcriber_model": "small",
-        "denoise_enabled": true,
-        "aggressive_denoise": false
-      },
-      {
-        "step": "FILE_VALIDATION",
-        "status": "SUCCESS",
-        "message": "Input file validated",
-        "file_type": ".wav"
-      },
-      {
-        "step": "AUDIO_CONVERSION",
-        "status": "INFO",
-        "message": "Starting audio format standardization"
-      },
-      {
-        "step": "AUDIO_PROCESSING",
-        "status": "INFO",
-        "message": "Processing audio file: 'AirportAnnouncement_noise.wav'"
-      },
-      {
-        "step": "AUDIO_PROCESSING",
-        "status": "INFO",
-        "message": "Using WAV file directly: AirportAnnouncement_noise.wav"
-      },
-      {
-        "step": "AUDIO_ENHANCEMENT",
-        "status": "INFO",
-        "message": "Starting audio enhancement",
-        "aggressive_mode": false
-      },
-      {
-        "step": "AUDIO_ENHANCEMENT",
-        "status": "SUCCESS",
-        "message": "Audio enhancement completed"
-      },
-      {
-        "step": "MODEL_INIT",
-        "status": "INFO",
-        "message": "Initializing AI models"
-      },
-      {
-        "step": "MODEL_INIT",
-        "status": "SUCCESS",
-        "message": "AI models initialized successfully"
-      },
-      {
-        "step": "TRANSCRIPTION",
-        "status": "INFO",
-        "message": "Starting transcription of: AirportAnnouncement_noise_enhanced.wav"
-      },
-      {
-        "step": "TRANSCRIPTION",
-        "status": "SUCCESS",
-        "message": "Transcription completed",
-        "detected_language": "de",
-        "transcript_length_chars": 319,
-        "result": " Sehr geehrte Damen und Herren, bitte beachten Sie das Rauchverbot in unseren Terminens. Das Rauchen ist nur in den ausgewiesenen Raucherbereichen gestattet. Vielen Dank. Your attention please. Please do not smoke in the terminal building. Smoking is only permitted in the specified smoking areas. Thank you. Thank you."
-      },
-      {
-        "step": "TEXT_PROCESSING",
-        "status": "INFO",
-        "message": "Starting text processing and summarization"
-      },
-      {
-        "step": "TEXT_CHUNKING",
-        "status": "SUCCESS",
-        "message": "Text split into chunks",
-        "num_chunks": 1,
-        "chunk_size": 2000
-      },
-      {
-        "step": "CLUSTERING",
-        "status": "INFO",
-        "message": "Single chunk - no clustering needed"
-      },
-      {
-        "step": "SUMMARIZATION",
-        "status": "INFO",
-        "message": "Generating comprehensive summary"
-      },
-      {
-        "step": "SUMMARIZATION",
-        "status": "SUCCESS",
-        "message": "Final summary generated",
-        "summary_length_chars": 135,
-        "cluster_summaries": [
-          "Das Rauchen ist im Terminalgebäude nicht erlaubt, sondern nur in den dafür vorgesehenen Raucherbereichen.\n"
-        ],
-        "summary": "Im gesamten Terminalgebäude ist das Rauchen untersagt. Es ist ausschließlich in den speziell ausgewiesenen Raucherbereichen gestattet.\n"
-      },
-      {
-        "step": "PIPELINE_COMPLETE",
-        "status": "SUCCESS",
-        "message": "Audio/video processing pipeline completed successfully"
-      }
-    ]
-  },
-  {
-    "run_id": 3,
-    "logs": [
-      {
-        "step": "INITIALIZATION",
-        "status": "INFO",
-        "message": "Starting audio/video processing pipeline",
         "input_file": "data\\video\\tes.mp4",
         "transcriber_model": "small",
         "denoise_enabled": false,
@@ -270,8 +58,19 @@
         "status": "SUCCESS",
         "message": "Transcription completed",
         "detected_language": "en",
-        "transcript_length_chars": 5628,
-        "result": " The White House has released in full the statement signed by Donald Trump and regional leaders in the Egyptian resort of Sharm el-Shayk yesterday aiming to cement the Gaza ceasefire. It calls for a lasting peace in which both Palestinians and Israelis can prosper with their fundamental human rights protected and their security guaranteed. Egypt's President Abdel Fattah al-Sisi, who also signed the document, said it set the stage for a two-state solution which would see Palestinians and Israelis living side by side. President Trump is now back in Washington. He landed in the last hour or so. Our State Department correspondent Tom Bateman was on Air Force One and got to question Mr Trump when he came to speak to the media on board. President, I wanted to ask you about your conversations with world leaders today. You said that everybody is unified over your plan, but we heard from President Sisi calling for a two-state solution, an independent Palestinian state. I'm talking about something very much different. We're talking about rebuilding Gaza. I'm not talking about single state or double state or two state. We're talking about the rebuilding of Gaza. What's the road ahead for governing Gaza? A lot of people like the one state solution. Some people like the two state solutions. We'll have to see. I haven't commented on that. How do you see bridging that gap? Because you have the Arab countries being very clever. I think it's right, but I'd be in coordination with other states and other countries. Are you satisfied with what some people might say? If it was a premature declaring peace for the whole Middle East, you know, 3,000 years of peace itself. You want more people to be killed? What do you want? 3,400,000 people to be killed? Is that what you're looking for? But in terms of the risks in Gaza, you know, we're already seeing functionalities. So you mean let them fight on for another couple of years and let some more buildings fall down on top of people and keep it going? No, no, we did it the right way. We did it. I think our timing was perfect, actually. You don't really mean that. You mean you want them to fight on, right? I'm just asking about the phase two of the negotiations and how confident you are that those can get underway in the two. We have a lot of power. That was a power room. Those people, those are the richest countries. I think now with tariffs, I think we're the richest country in the world, actually. The United States would take it in hundreds of billions of dollars. But those are, you know, really seriously rich countries and they can handle it. The questions there coming from the BBC's State Department correspondent Tom Bateman on board Air Force One with President Trump. Well, yesterday's summit in Egypt brought together international leaders to discuss the next phase. Alongside Sir Keir Starmer, Emmanuel Macron and others, was King Abdullah of Jordan, his country boarders Israel and the occupied West Bank. Speaking before the summit took place, the King sat down with Fergal Keane and warned that the Middle East is doomed unless there is a peace process that leads to a Palestinian state alongside Israel. And so these guys are the descendants of those who are. King Abdullah is the longest serving leader in the region, sharing a border with Israel and with Palestinians making up more than 50% of his country's population. So you're not just a your chair, are you? A lasting peace is a personal and a national imperative. If we don't solve this problem, we're going to be at it again. So in my view, two-state solution is the only way forward. If we don't find a future for Israelis and Palestinians and a relationship between the Arab and Muslim world and Israel, we're doomed. So much is unresolved. The physical recovery, let alone the mental trauma left by war. Who will really run the Gaza Strip in a political landscape devoid of trust? Do you trust Hamas when they say they accept not being part of the political future? Well, I don't know them, but those that are working extremely close to them, Qatar and Egypt feel very, very optimistic that they will abide by that. Is it possible with Prime Minister Netanyahu and the right-wing coalition in power to have a lasting peace? From my experience, no. Most nations, when they look at strategic challenges, look at what is the end game. I believe that this Prime Minister and his group, their strategic end game is perpetual conflict. By perpetual conflict, they stay in power. But there are those in Israel that believe in inclusion, that want to change the way that this government has gone. And these are the peace builders that I think we can work with once there's an opportunity to do so. By his Excellency Benjamin Netanyahu. Israel's Prime Minister has pledged there be no Palestinian state. In fact, they effectively had a Palestinian state in Gaza. So what did they do with that state? Peace? Coexistence? No. They attacked us time and time again. The king says its vital President Trump stays engaged with the process. I think it's important that him and his administration do because the devil is in the detail. So we are dealing with phase one at the moment where it could go awry would be as we get into the technical issues of phase two. And then is that an opportunity for mischief? I believe the President understands this and it's the responsibility to all of us in the region to make sure that the President gets us across the finish line. History does not encourage hope. But the king does believe this is a moment of genuine possibility. Fergal Keen, BBC News, Amman."
+        "transcript_length_chars": 5626,
+        "result": " The White House has released in full the statement signed by Donald Trump and regional leaders in the Egyptian resort of Sharm el-Shayk yesterday aiming to cement the Gaza ceasefire. It calls for a lasting peace in which both Palestinians and Israelis can prosper with their fundamental human rights protected and their security guaranteed. Egypt's President Abdel Fattah al-Sisi, who also signed the document, said it set the stage for a two-state solution which would see Palestinians and Israelis living side by side. President Trump is now back in Washington. He landed in the last hour or so. Our State Department correspondent Tom Bateman was on Air Force One and got to question Mr Trump when he came to speak to the media on board. President, I wanted to ask you about your conversations with world leaders today. You said that everybody is unified over your plan, but we heard from President Sisi calling for a two-state solution, an independent Palestinian state. I'm talking about something very much different. We're talking about rebuilding Gaza. I'm not talking about single state or double state or two state. We're talking about the rebuilding of Gaza. What's the road ahead for governing Gaza? A lot of people like the one state solution. Some people like the two state solutions. We'll have to see. I haven't commented on that. How do you see bridging that gap? Because you have the Arab countries being very clever. I think it's right, but I'd be in coordination with other states and other countries. Are you satisfied with what some people might say? If it was a premature declaring peace for the whole Middle East, you know, 3,000 years of peace itself. You want more people to be killed? What do you want? 3,400,000 people to be killed? Is that what you're looking for? But in terms of the risks in Gaza, you know, we're already seeing functionalities. So you mean let them fight on for another couple of years and let some more buildings fall down on top of people and keep it going? No, no, we did it the right way. We did it. I think our timing was perfect, actually. You don't really mean that. You mean you want them to fight on, right? I'm just asking about the phase two of the negotiations and how confident you are that those can get underway in the two. We have a lot of power. That was a power room. Those people, those are the richest countries. I think now with tariffs, I think we're the richest country in the world, actually. The United States would take it in hundreds of billions of dollars. But those are, you know, really seriously rich countries and they can handle it. The questions there coming from the BBC's State Department correspondent Tom Bateman on board Air Force One with President Trump. Well, yesterday's summit in Egypt brought together international leaders to discuss the next phase. Alongside Sakeh's Dharma, Emmanuel Macron and others, was King Abdullah of Jordan, his country boarders Israel and the occupied West Bank. Speaking before the summit took place, the king sat down with Fergal Keane and warned that the Middle East is doomed unless there is a peace process that leads to a Palestinian state alongside Israel. And so these guys are the descendants of those who are. King Abdullah is the longest serving leader in the region, sharing a border with Israel and with Palestinians making up more than 50% of his country's population. So you're not just a your chair, are you? A lasting peace is a personal and a national imperative. If we don't solve this problem, we're going to be at it again. So in my view, two-state solution is the only way forward. If we don't find a future for Israelis and Palestinians and a relationship between the Arab and Muslim world and Israel, we're doomed. So much is unresolved. The physical recovery, let alone the mental trauma left by war. Who will really run the Gaza Strip in a political landscape devoid of trust? Do you trust Hamas when they say they accept not being part of the political future? Well, I don't know them, but those that are working extremely close to them, Qatar and Egypt feel very, very optimistic that they will abide by that. Is it possible with Prime Minister Netanyahu and the right-wing coalition in power to have a lasting peace? From my experience, no. Most nations, when they look at strategic challenges, look at what is the end game. I believe that this Prime Minister and his group, their strategic end game is perpetual conflict. By perpetual conflict, they stay in power. But there are those in Israel that believe in inclusion, that want to change the way that this government has gone. And these are the peace builders that I think we can work with once there's an opportunity to do so. By his Excellency Benjamin Netanyahu. Israel's Prime Minister has pledged there be no Palestinian state. In fact, they effectively had a Palestinian state in Gaza. So what did they do with that state? Peace? Coexistence? No. They attacked us time and time again. The king says its vital President Trump stays engaged with the process. I think it's important that him and his administration do because the devil is in the detail. So we are dealing with phase one at the moment where it could go awry would be as we get into the technical issues of phase two. And then is that an opportunity for mischief? I believe the President understands this and it's the responsibility to all of us in the region to make sure that the President gets us across the finish line. History does not encourage hope. But the king does believe this is a moment of genuine possibility. Fergal Keen, BBC News, Amman."
+      },
+      {
+        "step": "CORRECTION",
+        "status": "INFO",
+        "message": "Applying language rule correction"
+      },
+      {
+        "step": "CORRECTION",
+        "status": "SUCCESS",
+        "message": "Language correction applied",
+        "corrected_result": "The White House has released in full the statement signed by Donald Trump and regional leaders in the Egyptian resort of Sharm el-Sheikh yesterday, aiming to cement the Gaza ceasefire. It calls for a lasting peace in which both Palestinians and Israelis can prosper, with their fundamental human rights protected and their security guaranteed. Egypt's President Abdel Fattah al-Sisi, who also signed the document, said it set the stage for a two-state solution which would see Palestinians and Israelis living side by side. President Trump is now back in Washington. He landed in the last hour or so. Our State Department correspondent, Tom Bateman, was on Air Force One and got to question Mr. Trump when he came to speak to the media on board. President, I wanted to ask you about your conversations with world leaders today. You said that everybody is unified over your plan, but we heard from President Sisi calling for a two-state solution, an independent Palestinian state. I'm talking about something very much different. We're talking about rebuilding Gaza. I'm not talking about a single state or double state or two-state. We're talking about the rebuilding of Gaza. What's the road ahead for governing Gaza? A lot of people like the one-state solution. Some people like the two-state solutions. We'll have to see. I haven't commented on that. How do you see bridging that gap? Because you have the Arab countries being very clever. I think it's right, but I'd be in coordination with other states and other countries. Are you satisfied with what some people might say? If it was a premature declaring peace for the whole Middle East, you know, 3,000 years of peace itself. You want more people to be killed? What do you want? 3,400,000 people to be killed? Is that what you're looking for? But in terms of the risks in Gaza, you know, we're already seeing functionalities. So you mean let them fight on for another couple of years and let some more buildings fall down on top of people and keep it going? No, no, we did it the right way. We did it. I think our timing was perfect, actually. You don't really mean that. You mean you want them to fight on, right? I'm just asking about the phase two of the negotiations and how confident you are that those can get underway in the two. We have a lot of power. That was a power room. Those people, those are the richest countries. I think now with tariffs, I think we're the richest country in the world, actually. The United States would take it in hundreds of billions of dollars. But those are, you know, really seriously rich countries and they can handle it. The questions there coming from the BBC's State Department correspondent, Tom Bateman, on board Air Force One with President Trump. Well, yesterday's summit in Egypt brought together international leaders to discuss the next phase. Alongside Sakih's Dharma, Emmanuel Macron, and others, was King Abdullah of Jordan. His country borders Israel and the occupied West Bank. Speaking before the summit took place, the King sat down with Fergal Keane and warned that the Middle East is doomed unless there is a peace process that leads to a Palestinian state alongside Israel. And so these guys are the descendants of those who are. King Abdullah is the longest serving leader in the region, sharing a border with Israel and with Palestinians making up more than 50% of his country's population. So you're not just a chair, are you? A lasting peace is a personal and a national imperative. If we don't solve this problem, we're going to be at it again. So in my view, a two-state solution is the only way forward. If we don't find a future for Israelis and Palestinians and a relationship between the Arab and Muslim world and Israel, we're doomed. So much is unresolved. The physical recovery, let alone the mental trauma left by war. Who will really run the Gaza Strip in a political landscape devoid of trust? Do you trust Hamas when they say they accept not being part of the political future? Well, I don't know them, but those that are working extremely close to them, Qatar and Egypt, feel very, very optimistic that they will abide by that. Is it possible with Prime Minister Netanyahu and the right-wing coalition in power to have a lasting peace? From my experience, no. Most nations, when they look at strategic challenges, look at what is the endgame. I believe that this Prime Minister and his group, their strategic endgame is perpetual conflict. By perpetual conflict, they stay in power. But there are those in Israel that believe in inclusion, that want to change the way that this government has gone. And these are the peace builders that I think we can work with once there's an opportunity to do so. By His Excellency Benjamin Netanyahu. Israel's Prime Minister has pledged there be no Palestinian state. In fact, they effectively had a Palestinian state in Gaza. So what did they do with that state? Peace? Coexistence? No. They attacked us time and time again. The King says it's vital President Trump stays engaged with the process. I think it's important that him and his administration do because the devil is in the detail. So we are dealing with phase one at the moment where it could go awry would be as we get into the technical issues of phase two. And then is that an opportunity for mischief? I believe the President understands this and it's the responsibility to all of us in the region to make sure that the President gets us across the finish line. History does not encourage hope. But the King does believe this is a moment of genuine possibility. Fergal Keen, BBC News, Amman."
       },
       {
         "step": "TEXT_PROCESSING",
@@ -288,13 +87,7 @@
       {
         "step": "CLUSTERING",
         "status": "INFO",
-        "message": "Clustering chunks by topic"
-      },
-      {
-        "step": "CLUSTERING",
-        "status": "SUCCESS",
-        "message": "Topic clustering completed",
-        "num_clusters": 0
+        "message": "FEW CHUNKS - no clustering needed"
       },
       {
         "step": "SUMMARIZATION",
@@ -305,114 +98,11 @@
         "step": "SUMMARIZATION",
         "status": "SUCCESS",
         "message": "Final summary generated",
-        "summary_length_chars": 33,
-        "cluster_summaries": [],
-        "summary": "Failed to generate final summary."
-      },
-      {
-        "step": "PIPELINE_COMPLETE",
-        "status": "SUCCESS",
-        "message": "Audio/video processing pipeline completed successfully"
-      }
-    ]
-  },
-  {
-    "run_id": 4,
-    "logs": [
-      {
-        "step": "INITIALIZATION",
-        "status": "INFO",
-        "message": "Starting audio/video processing pipeline",
-        "input_file": "data\\video\\tes.mp4",
-        "transcriber_model": "small",
-        "denoise_enabled": false,
-        "aggressive_denoise": false
-      },
-      {
-        "step": "FILE_VALIDATION",
-        "status": "SUCCESS",
-        "message": "Input file validated",
-        "file_type": ".mp4"
-      },
-      {
-        "step": "AUDIO_CONVERSION",
-        "status": "INFO",
-        "message": "Starting audio format standardization"
-      },
-      {
-        "step": "VIDEO_PROCESSING",
-        "status": "INFO",
-        "message": "Processing video file: 'tes.mp4'"
-      },
-      {
-        "step": "VIDEO_PROCESSING",
-        "status": "SUCCESS",
-        "message": "Video converted to audio",
-        "output_file": "data\\audio\\tes.wav"
-      },
-      {
-        "step": "AUDIO_ENHANCEMENT",
-        "status": "INFO",
-        "message": "Audio enhancement skipped by user choice"
-      },
-      {
-        "step": "MODEL_INIT",
-        "status": "INFO",
-        "message": "Initializing AI models"
-      },
-      {
-        "step": "MODEL_INIT",
-        "status": "SUCCESS",
-        "message": "AI models initialized successfully"
-      },
-      {
-        "step": "TRANSCRIPTION",
-        "status": "INFO",
-        "message": "Starting transcription of: tes.wav"
-      },
-      {
-        "step": "TRANSCRIPTION",
-        "status": "SUCCESS",
-        "message": "Transcription completed",
-        "detected_language": "en",
-        "transcript_length_chars": 5628,
-        "result": " The White House has released in full the statement signed by Donald Trump and regional leaders in the Egyptian resort of Sharm el-Shayk yesterday aiming to cement the Gaza ceasefire. It calls for a lasting peace in which both Palestinians and Israelis can prosper with their fundamental human rights protected and their security guaranteed. Egypt's President Abdel Fattah al-Sisi, who also signed the document, said it set the stage for a two-state solution which would see Palestinians and Israelis living side by side. President Trump is now back in Washington. He landed in the last hour or so. Our State Department correspondent Tom Bateman was on Air Force One and got to question Mr Trump when he came to speak to the media on board. President, I wanted to ask you about your conversations with world leaders today. You said that everybody is unified over your plan, but we heard from President Sisi calling for a two-state solution, an independent Palestinian state. I'm talking about something very much different. We're talking about rebuilding Gaza. I'm not talking about single state or double state or two state. We're talking about the rebuilding of Gaza. What's the road ahead for governing Gaza? A lot of people like the one state solution. Some people like the two state solutions. We'll have to see. I haven't commented on that. How do you see bridging that gap? Because you have the Arab countries being very clever. I think it's right, but I'd be in coordination with other states and other countries. Are you satisfied with what some people might say? If it was a premature declaring peace for the whole Middle East, you know, 3,000 years of peace itself. You want more people to be killed? What do you want? 3,400,000 people to be killed? Is that what you're looking for? But in terms of the risks in Gaza, you know, we're already seeing functionalities. So you mean let them fight on for another couple of years and let some more buildings fall down on top of people and keep it going? No, no, we did it the right way. We did it. I think our timing was perfect, actually. You don't really mean that. You mean you want them to fight on, right? I'm just asking about the phase two of the negotiations and how confident you are that those can get underway in the two. We have a lot of power. That was a power room. Those people, those are the richest countries. I think now with tariffs, I think we're the richest country in the world, actually. The United States would take it in hundreds of billions of dollars. But those are, you know, really seriously rich countries and they can handle it. The questions there coming from the BBC's State Department correspondent Tom Bateman on board Air Force One with President Trump. Well, yesterday's summit in Egypt brought together international leaders to discuss the next phase. Alongside Sir Keir Starmer, Emmanuel Macron and others, was King Abdullah of Jordan, his country boarders Israel and the occupied West Bank. Speaking before the summit took place, the King sat down with Fergal Keane and warned that the Middle East is doomed unless there is a peace process that leads to a Palestinian state alongside Israel. And so these guys are the descendants of those who are. King Abdullah is the longest serving leader in the region, sharing a border with Israel and with Palestinians making up more than 50% of his country's population. So you're not just a your chair, are you? A lasting peace is a personal and a national imperative. If we don't solve this problem, we're going to be at it again. So in my view, two-state solution is the only way forward. If we don't find a future for Israelis and Palestinians and a relationship between the Arab and Muslim world and Israel, we're doomed. So much is unresolved. The physical recovery, let alone the mental trauma left by war. Who will really run the Gaza Strip in a political landscape devoid of trust? Do you trust Hamas when they say they accept not being part of the political future? Well, I don't know them, but those that are working extremely close to them, Qatar and Egypt feel very, very optimistic that they will abide by that. Is it possible with Prime Minister Netanyahu and the right-wing coalition in power to have a lasting peace? From my experience, no. Most nations, when they look at strategic challenges, look at what is the end game. I believe that this Prime Minister and his group, their strategic end game is perpetual conflict. By perpetual conflict, they stay in power. But there are those in Israel that believe in inclusion, that want to change the way that this government has gone. And these are the peace builders that I think we can work with once there's an opportunity to do so. By his Excellency Benjamin Netanyahu. Israel's Prime Minister has pledged there be no Palestinian state. In fact, they effectively had a Palestinian state in Gaza. So what did they do with that state? Peace? Coexistence? No. They attacked us time and time again. The king says its vital President Trump stays engaged with the process. I think it's important that him and his administration do because the devil is in the detail. So we are dealing with phase one at the moment where it could go awry would be as we get into the technical issues of phase two. And then is that an opportunity for mischief? I believe the President understands this and it's the responsibility to all of us in the region to make sure that the President gets us across the finish line. History does not encourage hope. But the king does believe this is a moment of genuine possibility. Fergal Keen, BBC News, Amman."
-      },
-      {
-        "step": "TEXT_PROCESSING",
-        "status": "INFO",
-        "message": "Starting text processing and summarization"
-      },
-      {
-        "step": "TEXT_CHUNKING",
-        "status": "SUCCESS",
-        "message": "Text split into chunks",
-        "num_chunks": 3,
-        "chunk_size": 2000
-      },
-      {
-        "step": "CLUSTERING",
-        "status": "INFO",
-        "message": "Clustering chunks by topic"
-      },
-      {
-        "step": "CLUSTERING",
-        "status": "SUCCESS",
-        "message": "Topic clustering completed",
-        "num_clusters": 0
-      },
-      {
-        "step": "SUMMARIZATION",
-        "status": "INFO",
-        "message": "Generating comprehensive summary"
-      },
-      {
-        "step": "SUMMARIZATION",
-        "status": "SUCCESS",
-        "message": "Final summary generated",
-        "summary_length_chars": 148,
-        "cluster_summaries": [],
-        "summary": "Please provide the key points from the transcript that you want me to combine into a coherent paragraph. I need the content to be able to help you.\n"
+        "summary_length_chars": 313,
+        "cluster_summaries": [
+          "Following a summit in Egypt where a ceasefire agreement was signed, President Trump and King Abdullah of Jordan expressed differing views on the path forward, with Trump focusing on rebuilding Gaza and Abdullah emphasizing the necessity of a two-state solution for lasting peace.\n"
+        ],
+        "summary": "Following a ceasefire agreement signed at a summit in Egypt, President Trump and King Abdullah of Jordan articulated divergent perspectives on the future, with Trump prioritizing the reconstruction of Gaza while Abdullah stressed the critical need for a two-state solution to achieve a durable and lasting peace.\n"
       },
       {
         "step": "PIPELINE_COMPLETE",

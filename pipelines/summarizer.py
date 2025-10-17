@@ -1,20 +1,13 @@
 import time
 from sklearn.cluster import HDBSCAN
 from collections import defaultdict
-import google.generativeai as genai
 from langchain.text_splitter import RecursiveCharacterTextSplitter # https://python.langchain.com/docs/how_to/recursive_text_splitter/
 from sentence_transformers import SentenceTransformer # https://sbert.net/
 
 class Summarizer:
-    def __init__(self, gemini_api_key):
-        start_time = time.time()
+    def __init__(self, gemini_model):
         self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
-        try:
-            genai.configure(api_key=gemini_api_key)
-            self.gemini_model = genai.GenerativeModel('gemini-2.0-flash')
-            print(f"summarizer's ready in {time.time() - start_time:.2f} seconds.")
-        except Exception as e:
-            raise ValueError(f"Gemini API configuration failed: {e}")
+        self.gemini_model = gemini_model
 
     def chunk_text(self, text, max_chunk_size=1500):
         """
@@ -36,7 +29,6 @@ class Summarizer:
         function to create embeddings and cluster chunks by topic using HDBSCAN.
         """
         print("Clustering text chunks")
-        start_time = time.time()
         embeddings = self.embedding_model.encode(chunks) # Creating vector embeddings
         # texts with similar meanings will be close to each other
 
@@ -47,15 +39,21 @@ class Summarizer:
         cluster_labels = clusterer.fit_predict(embeddings)
         # cluster_labels = [0, 1, 2, 1, -1, 0, 2]
 
-        num_clusters = len(set(cluster_labels)) - (1 if -1 in cluster_labels else 0)
-        
         clustered_chunks = defaultdict(list)
-        for i, chunk in enumerate(chunks):
-            if cluster_labels[i] != -1:
-                clustered_chunks[cluster_labels[i]].append(chunk)
+        noise_count = 0
+        for i, label in enumerate(cluster_labels):
+            if label != -1:
+                clustered_chunks[label].append(chunks[i])
+            else:
+                noise_count += 1
 
-        print(f"Found {num_clusters} main topics.")
-        print(f"Clustering completed in {time.time() - start_time:.2f} seconds.")
+        num_clusters = len(clustered_chunks)
+        total_chunks = len(chunks)
+        noise_percentage = (noise_count / total_chunks) * 100 if total_chunks > 0 else 0
+        
+        print(f"Found {num_clusters} main topics.") 
+        print(f"  - Discarded as noise: {noise_count} chunks ({noise_percentage:.1f}%)")
+
         return dict(clustered_chunks)
     
     def get_final_summary(self, clusters: dict, language="en"):

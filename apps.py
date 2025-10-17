@@ -3,13 +3,29 @@ import argparse
 from pathlib import Path
 from dotenv import load_dotenv
 
+import google.generativeai as genai
+
 from pipelines.converter import convert_video_to_audio, convert_audio_format
 from pipelines.transcriber import Transcriber
 from pipelines.summarizer import Summarizer
 from pipelines.preprocessor import enhance_audio
 from helper import JSONLogger
 
+
 load_dotenv()
+
+try:
+    print("Initializing Gemini model...")
+    GEMINI_API_KEY = os.getenv("GOOGLE_API_KEY")
+    if not GEMINI_API_KEY:
+        raise ValueError("GOOGLE_API_KEY not found in .env file")
+    genai.configure(api_key=GEMINI_API_KEY)
+    gemini_model = genai.GenerativeModel('gemini-2.0-flash') 
+    print("Gemini model initialized successfully.")
+except Exception as e:
+    print(f"FATAL: Gemini model initialization failed: {e}")
+    exit(1)
+
 
 LANGUAGES = {
     "en": "english", "zh": "chinese", "de": "german", "es": "spanish", "ru": "russian",
@@ -123,8 +139,8 @@ if __name__ == "__main__":
     logger.log("MODEL_INIT", "INFO", "Initializing AI models")
     
     try:
-        transcriber = Transcriber(model_name=args.transcriber_model) 
-        summarizer = Summarizer(gemini_api_key=os.getenv("GOOGLE_API_KEY"))
+        transcriber = Transcriber(model_name=args.transcriber_model, gemini_model=gemini_model) 
+        summarizer = Summarizer(gemini_model=gemini_model)
         logger.log("MODEL_INIT", "SUCCESS", "AI models initialized successfully")
     except Exception as e:
         logger.log("MODEL_INIT", "ERROR", f"Initialization error: {e}")
@@ -133,13 +149,15 @@ if __name__ == "__main__":
     # Transcribe audio to text
     logger.log("TRANSCRIPTION", "INFO", f"Starting transcription of: {audio_path.name}")
 
-    transcription = transcriber.transcribe(audio_path, language=args.language)
-    if transcription:
-        result, language = transcription
+    result, language = transcriber.transcribe(audio_path, language=args.language)
+    if result:
         logger.log("TRANSCRIPTION", "SUCCESS", "Transcription completed",
                    detected_language=language,
                    transcript_length_chars=len(result),
                    result=result)
+        logger.log("CORRECTION", "INFO", "Applying language rule correction")
+        corrected_result = transcriber.language_rules(result, language)
+        logger.log("CORRECTION", "SUCCESS", "Language correction applied", corrected_result=corrected_result)
     else:
         logger.log("TRANSCRIPTION", "ERROR", "Transcription failed")
         exit(1)
@@ -153,14 +171,14 @@ if __name__ == "__main__":
                num_chunks=len(chunks),
                chunk_size=args.chunk_size)
     
-    if len(chunks) > 1:
+    if len(chunks) > 7:
         logger.log("CLUSTERING", "INFO", "Clustering chunks by topic")
         clusters = summarizer.cluster_chunks(chunks)
         logger.log("CLUSTERING", "SUCCESS", "Topic clustering completed",
                    num_clusters=len(clusters))
     else:
         clusters = {0: chunks}
-        logger.log("CLUSTERING", "INFO", "Single chunk - no clustering needed")
+        logger.log("CLUSTERING", "INFO", "FEW CHUNKS - no clustering needed")
 
     # Generate Final Summary
     logger.log("SUMMARIZATION", "INFO", "Generating comprehensive summary")
