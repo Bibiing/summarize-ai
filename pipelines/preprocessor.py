@@ -4,7 +4,7 @@ import librosa
 import numpy as np
 from pathlib import Path
 from scipy import signal
-from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
+from concurrent.futures import ProcessPoolExecutor
 from functools import partial
 import multiprocessing as mp
 from pipelines.converter import convert_audio_format
@@ -17,13 +17,13 @@ def audio_quality(data: np.ndarray, sr: int) -> dict:
     spectral_rolloff = librosa.feature.spectral_rolloff(y=data, sr=sr)[0]
     zcr = librosa.feature.zero_crossing_rate(data)[0]
     rms_energy = librosa.feature.rms(y=data)[0]
-    
-    # Simple quality assessment based on energy distribution
+
+    # Quality assessment based on energy distribution
     avg_rolloff = np.mean(spectral_rolloff)
     avg_zcr = np.mean(zcr)
     avg_energy = np.mean(rms_energy)
-    
-    # quality level (higher rolloff and moderate ZCR usually indicate better quality)
+
+    # Quality level (higher rolloff and moderate ZCR usually indicate better quality)
     if avg_rolloff > 4000 and avg_energy > 0.01:
         quality_level = "high"
     elif avg_rolloff > 2000 and avg_energy > 0.005:
@@ -107,30 +107,26 @@ def parallel_noise_reduction(data: np.ndarray, sr: int, prop_decrease: float, st
     
     return result
 
-def enhance_audio_adaptive(data: np.ndarray, sr: int, quality_info: dict, 
-                          use_parallel: bool = True) -> np.ndarray:
+def enhance_audio_adaptive(data: np.ndarray, sr: int, quality_info: dict, use_parallel: bool = True) -> np.ndarray:
     """
     Apply adaptive noise reduction based on audio quality assessment.
     """
     quality_level = quality_info["quality_level"]
-    
-    # Choose processing function
-    noise_reduce_func = parallel_noise_reduction if use_parallel else nr.reduce_noise
-    
+        
     if quality_level == "low":
         # Aggressive noise reduction for poor quality audio
         # Multi-stage approach for heavily degraded audio
         
-        # Stage 1: High-pass filter to remove low-frequency noise
+        # High-pass filter to remove low-frequency noise
         data = apply_high_pass_filter(data, sr, cutoff_freq=100)
-        
-        # Stage 2: Spectral gating noise reduction
+
+        # Spectral gating noise reduction
         if use_parallel:
             data = parallel_noise_reduction(data, sr, prop_decrease=0.9, stationary=False)
         else:
             data = nr.reduce_noise(y=data, sr=sr, prop_decrease=0.9, stationary=False)
         
-        # Stage 3: Additional spectral subtraction for residual noise
+        # Additional spectral subtraction for residual noise
         if use_parallel:
             data = parallel_noise_reduction(data, sr, prop_decrease=0.3, stationary=True)
         else:
@@ -172,14 +168,9 @@ def normalize_audio(data: np.ndarray, target_level: float = -20.0) -> np.ndarray
 def enhance_audio(input_path: Path, aggressive_mode: bool = False, use_parallel: bool = True):
     """
     Enhanced audio preprocessing with quality assessment and adaptive processing.
-    
-    Args:
-        input_path: Path to input audio file
-        aggressive_mode: Force maximum noise reduction
-        use_parallel: Enable parallel processing (default: True)
     """
     try:
-        # First, ensure audio is in WAV format with consistent sample rate
+        # Ensure audio is in WAV format with consistent sample rate
         if input_path.suffix.lower() != '.wav':
             print(f"Converting {input_path.name} to WAV format...")
             wav_path = convert_audio_format(input_path)
