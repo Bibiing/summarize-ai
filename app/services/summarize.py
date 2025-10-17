@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+import google.generativeai as genai
 
 from app.pipelines.converter import convert_video_to_audio, convert_audio_format
 from app.pipelines.transcriber import Transcriber
@@ -9,6 +10,18 @@ from app.pipelines.preprocessor import enhance_audio
 from app.helper import JSONLogger
 
 load_dotenv()
+
+try:
+    print("Initializing Gemini model...")
+    GEMINI_API_KEY = os.getenv("GOOGLE_API_KEY")
+    if not GEMINI_API_KEY:
+        raise ValueError("GOOGLE_API_KEY not found in .env file")
+    genai.configure(api_key=GEMINI_API_KEY)
+    gemini_model = genai.GenerativeModel('gemini-2.0-flash') 
+    print("Gemini model initialized successfully.")
+except Exception as e:
+    print(f"FATAL: Gemini model initialization failed: {e}")
+    exit(1)
 
 def run_pipeline(
     input_file: Path,
@@ -22,6 +35,7 @@ def run_pipeline(
     logger = JSONLogger()
     audio_path = None
 
+    type_supported = [".mp4", ".mkv", ".mov", ".mp3", ".wav", ".m4a", ".flac", ".ogg"]
     logger.log("INITIALIZATION", "INFO", "Starting audio/video processing pipeline", 
                input_file=str(input_file), 
                transcriber_model=transcriber_model,
@@ -32,10 +46,15 @@ def run_pipeline(
         logger.log("FILE_VALIDATION", "ERROR", f"Input file not found: {input_file}")
         return {"error": f"File not found: {input_file}"}
     
-    logger.log("FILE_VALIDATION", "SUCCESS", "Input file validated", file_type=input_file.suffix.lower())
+    input_type = input_file.suffix.lower()
+    if input_type not in type_supported:
+        logger.log("FILE_VALIDATION", "ERROR", f"Unsupported file type: {input_type}")
+        return {"error": f"Unsupported file type: {input_type}"}
+
+    logger.log("FILE_VALIDATION", "SUCCESS", "Input file validated", file_type=input_type)
     logger.log("AUDIO_CONVERSION", "INFO", "Starting audio format standardization")
     
-    if input_file.suffix.lower() in ["mkv", ".mp4"]:
+    if input_type in [".mp4", ".mkv", ".mov"]:
         logger.log("VIDEO_PROCESSING", "INFO", f"Processing video file: '{input_file.name}'")
         output_dir = Path("./data/audio")
         output_dir.mkdir(parents=True, exist_ok=True)
@@ -47,9 +66,9 @@ def run_pipeline(
             return {"error": "Video conversion failed"}
         logger.log("VIDEO_PROCESSING", "SUCCESS", "Video converted to audio", output_file=str(audio_path))
 
-    elif input_file.suffix.lower() in [".mp3", ".wav", ".m4a", ".flac", ".ogg"]:
+    elif input_type in [".mp3", ".wav", ".m4a", ".flac", ".ogg"]:
         logger.log("AUDIO_PROCESSING", "INFO", f"Processing audio file: '{input_file.name}'")
-        if input_file.suffix.lower() != ".wav" or force_wav:
+        if input_type != ".wav" or force_wav:
             output_dir = Path("./data/audio")
             output_dir.mkdir(parents=True, exist_ok=True)
             audio_path = output_dir / f"{input_file.stem}_standardized.wav"
@@ -81,8 +100,8 @@ def run_pipeline(
     # transcription and summarization api calls
     logger.log("MODEL_INIT", "INFO", "Initializing AI models")
     try:
-        transcriber = Transcriber(model_name=transcriber_model)
-        summarizer = Summarizer(gemini_api_key=os.getenv("GOOGLE_API_KEY"))
+        transcriber = Transcriber(model_name=transcriber_model, gemini_model=gemini_model)
+        summarizer = Summarizer(gemini_model=gemini_model)
         logger.log("MODEL_INIT", "SUCCESS", "AI models initialized successfully")
     except Exception as e:
         logger.log("MODEL_INIT", "ERROR", f"Initialization error: {e}")
@@ -93,32 +112,34 @@ def run_pipeline(
 
     # transcription 
     logger.log("TRANSCRIPTION", "INFO", f"Starting transcription of: {audio_path.name}")
-    transcription = transcriber.transcribe(audio_path, language=language)
-    if transcription:
-        result, detected_language = transcription
+    result, detected_language = transcriber.transcribe(audio_path, language=language)
+    if result:
         logger.log("TRANSCRIPTION", "SUCCESS", "Transcription completed",
                    detected_language=detected_language,
                    transcript_length_chars=len(result))
+        logger.log("CORRECTION", "INFO", "Applying language rule correction")
+        transcript = transcriber.language_rules(result, detected_language)
+        logger.log("CORRECTION", "SUCCESS", "Language correction applied")
     else:
         logger.log("TRANSCRIPTION", "ERROR", "Transcription failed")
         return {"error": "Transcription failed"}
 
     # chunking 
     logger.log("TEXT_PROCESSING", "INFO", "Starting text processing and summarization")
-    chunks = summarizer.chunk_text(result, chunk_size)
+    chunks = summarizer.chunk_text(transcript, chunk_size)
     logger.log("TEXT_CHUNKING", "SUCCESS", "Text split into chunks",
                num_chunks=len(chunks),
                chunk_size=chunk_size)
 
     # clustering
-    if len(chunks) > 1:
+    if len(chunks) > 7:
         logger.log("CLUSTERING", "INFO", "Clustering chunks by topic")
         clusters = summarizer.cluster_chunks(chunks)
         logger.log("CLUSTERING", "SUCCESS", "Topic clustering completed",
                    num_clusters=len(clusters))
     else:
         clusters = {0: chunks}
-        logger.log("CLUSTERING", "INFO", "Single chunk - no clustering needed")
+        logger.log("CLUSTERING", "INFO", "Few Chunks - no clustering needed")
 
     #summarization
     logger.log("SUMMARIZATION", "INFO", "Generating comprehensive summary")
@@ -141,7 +162,7 @@ def run_pipeline(
 
     return {
         "summary": final_summary,
-        "transcript": result,
+        "transcript": transcript,
         "detected_language": detected_language,
         "chunks": chunks,
         "cluster_summaries": cluster_summaries

@@ -6,15 +6,9 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter # https://pyt
 from sentence_transformers import SentenceTransformer # https://sbert.net/
 
 class Summarizer:
-    def __init__(self, gemini_api_key):
-        start_time = time.time()
+    def __init__(self, gemini_model):
         self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
-        try:
-            genai.configure(api_key=gemini_api_key)
-            self.gemini_model = genai.GenerativeModel('gemini-2.0-flash')
-            print(f"summarizer's ready in {time.time() - start_time:.2f} seconds.")
-        except Exception as e:
-            raise ValueError(f"Gemini API configuration failed: {e}")
+        self.gemini_model = gemini_model
 
     def chunk_text(self, text, max_chunk_size=1500):
         """
@@ -47,65 +41,26 @@ class Summarizer:
         cluster_labels = clusterer.fit_predict(embeddings)
         # cluster_labels = [0, 1, 2, 1, -1, 0, 2]
 
-        num_clusters = len(set(cluster_labels)) - (1 if -1 in cluster_labels else 0)
-        
         clustered_chunks = defaultdict(list)
-        for i, chunk in enumerate(chunks):
-            if cluster_labels[i] != -1:
-                clustered_chunks[cluster_labels[i]].append(chunk)
+        noise_count = 0
+        for i, label in enumerate(cluster_labels):
+            if label != -1:
+                clustered_chunks[label].append(chunks[i])
+            else:
+                noise_count += 1
 
-        # If no clusters found (all points labeled as noise), fall back to a single cluster
-        if len(clustered_chunks) == 0:
-            print("No dense clusters found by HDBSCAN; falling back to a single cluster containing all chunks.")
-            clustered_chunks[0] = chunks
-            num_clusters = 1
+        num_clusters = len(clustered_chunks)
+        total_chunks = len(chunks)
+        noise_percentage = (noise_count / total_chunks) * 100 if total_chunks > 0 else 0
+        
+        print(f"Found {num_clusters} main topics.") 
+        print(f"Discarded as noise: {noise_count} chunks ({noise_percentage:.1f}%)")
 
-        print(f"Found {num_clusters} main topics.")
-        print(f"Clustering completed in {time.time() - start_time:.2f} seconds.")
         return dict(clustered_chunks)
     
     def get_final_summary(self, clusters: dict, language="en"):
         print("Create a summary for each cluster...")
         cluster_summaries = []
-
-        def _extract_text_from_response(response):
-            """Robustly extract text from various response shapes returned by the Gemini client."""
-            # direct attribute
-            try:
-                if hasattr(response, "text") and isinstance(response.text, str):
-                    return response.text
-            except Exception:
-                pass
-
-            # dict-like responses
-            try:
-                if isinstance(response, dict):
-                    # common candidate format
-                    if "candidates" in response and response["candidates"]:
-                        cand = response["candidates"][0]
-                        if isinstance(cand, dict):
-                            # candidate may contain 'content' or 'text'
-                            if "content" in cand:
-                                content = cand["content"]
-                                if isinstance(content, str):
-                                    return content
-                                if isinstance(content, dict) and "text" in content:
-                                    return content["text"]
-                            for k in ("text", "message", "output_text"):
-                                if k in cand and isinstance(cand[k], str):
-                                    return cand[k]
-                    # top-level text keys
-                    for key in ("output_text", "text", "message"):
-                        if key in response and isinstance(response[key], str):
-                            return response[key]
-            except Exception:
-                pass
-
-            # fallback to stringifying
-            try:
-                return str(response)
-            except Exception:
-                return ""
 
         for cluster_id, cluster_chunks in sorted(clusters.items()):
             full_cluster_text = " ".join(cluster_chunks)
@@ -116,11 +71,7 @@ class Summarizer:
             )            
             try:
                 response = self.gemini_model.generate_content(prompt)
-                text = _extract_text_from_response(response)
-                if text:
-                    cluster_summaries.append(text.strip())
-                else:
-                    print(f"Warning: empty summary text for cluster {cluster_id}; response was: {response}")
+                cluster_summaries.append(response.text)
                 print(f"Summary for Cluster {cluster_id} completed.")
             except Exception as e:
                 print(f"Failed to summarize Cluster {cluster_id}. Error: {e}")
@@ -135,11 +86,7 @@ class Summarizer:
         )
         try:
             final_response = self.gemini_model.generate_content(final_prompt)
-            final_text = _extract_text_from_response(final_response)
-            if not final_text:
-                print(f"Warning: final summary text empty; response: {final_response}")
-                final_text = ""
-            return cluster_summaries, final_text
+            return cluster_summaries, final_response.text
         except Exception as e:
             print(f"Failed to create final summary. Error: {e}")
             return cluster_summaries, "Failed to generate final summary."
