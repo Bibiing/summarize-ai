@@ -202,5 +202,535 @@
         "message": "Pipeline completed successfully"
       }
     ]
+  },
+  {
+    "run_id": 3,
+    "logs": [
+      {
+        "step": "INITIALIZATION",
+        "status": "INFO",
+        "message": "Starting audio/video processing pipeline",
+        "input_file": "C:\\Users\\user\\AppData\\Local\\Temp\\874289d8-8377-4245-97e3-f6f3bfa2532e_Spanish-2-T4-Forms-of-Ir-S-A.mp3",
+        "transcriber_model": "small",
+        "denoise_enabled": false,
+        "aggressive_denoise": false
+      },
+      {
+        "step": "FILE_VALIDATION",
+        "status": "SUCCESS",
+        "message": "Input file validated",
+        "file_type": ".mp3"
+      },
+      {
+        "step": "AUDIO_CONVERSION",
+        "status": "INFO",
+        "message": "Starting audio format standardization"
+      },
+      {
+        "step": "AUDIO_PROCESSING",
+        "status": "INFO",
+        "message": "Processing audio file: '874289d8-8377-4245-97e3-f6f3bfa2532e_Spanish-2-T4-Forms-of-Ir-S-A.mp3'"
+      },
+      {
+        "step": "AUDIO_PROCESSING",
+        "status": "SUCCESS",
+        "message": "Audio format standardized",
+        "output_file": "data\\audio\\874289d8-8377-4245-97e3-f6f3bfa2532e_Spanish-2-T4-Forms-of-Ir-S-A_standardized.wav"
+      },
+      {
+        "step": "AUDIO_ENHANCEMENT",
+        "status": "INFO",
+        "message": "Audio enhancement skipped by user choice"
+      },
+      {
+        "step": "MODEL_INIT",
+        "status": "INFO",
+        "message": "Initializing AI models"
+      },
+      {
+        "step": "MODEL_INIT",
+        "status": "SUCCESS",
+        "message": "AI models initialized successfully"
+      },
+      {
+        "step": "TRANSCRIPTION",
+        "status": "INFO",
+        "message": "Starting transcription of: 874289d8-8377-4245-97e3-f6f3bfa2532e_Spanish-2-T4-Forms-of-Ir-S-A_standardized.wav"
+      },
+      {
+        "step": "TRANSCRIPTION",
+        "status": "SUCCESS",
+        "message": "Transcription completed",
+        "detected_language": "es",
+        "transcript_length_chars": 187
+      },
+      {
+        "step": "CORRECTION",
+        "status": "INFO",
+        "message": "Applying language rule correction"
+      },
+      {
+        "step": "CORRECTION",
+        "status": "SUCCESS",
+        "message": "Language correction applied"
+      },
+      {
+        "step": "TEXT_PROCESSING",
+        "status": "INFO",
+        "message": "Starting text processing and summarization"
+      },
+      {
+        "step": "TEXT_CHUNKING",
+        "status": "SUCCESS",
+        "message": "Text split into chunks",
+        "num_chunks": 1,
+        "chunk_size": 2000
+      },
+      {
+        "step": "CLUSTERING",
+        "status": "INFO",
+        "message": "Few Chunks - no clustering needed"
+      },
+      {
+        "step": "SUMMARIZATION",
+        "status": "INFO",
+        "message": "Generating comprehensive summary"
+      },
+      {
+        "step": "SUMMARIZATION",
+        "status": "SUCCESS",
+        "message": "Final summary generated",
+        "summary_length_chars": 289
+      },
+      {
+        "step": "PIPELINE_COMPLETE",
+        "status": "SUCCESS",
+        "message": "Pipeline completed successfully"
+      }
+    ]
+  },
+  {
+    "run_id": 4,
+    "logs": [
+      {
+        "step": "INITIALIZATION",
+        "status": "INFO",
+        "message": "Starting audio/video processing pipeline",
+        "input_file": "C:\\Users\\user\\AppData\\Local\\Temp\\fd6ef0eb-da2e-4a40-a54d-fd11fb453169_accidents.mp3",
+        "transcriber_model": "small",
+        "denoise_enabled": false,
+        "aggressive_denoise": false
+      },
+      {
+        "step": "FILE_VALIDATION",
+        "status": "SUCCESS",
+        "message": "Input file validated",
+        "file_type": ".mp3"
+      },
+      {
+        "step": "AUDIO_CONVERSION",
+        "status": "INFO",
+        "message": "Starting audio format standardization"
+      },
+      {
+        "step": "AUDIO_PROCESSING",
+        "status": "INFO",
+        "message": "Processing audio file: 'fd6ef0eb-da2e-4a40-a54d-fd11fb453169_accidents.mp3'"
+      },
+      {
+        "step": "AUDIO_PROCESSING",
+        "status": "SUCCESS",
+        "message": "Audio format standardized",
+        "output_file": "data\\audio\\fd6ef0eb-da2e-4a40-a54d-fd11fb453169_accidents_standardized.wav"
+      },
+      {
+        "step": "AUDIO_ENHANCEMENT",
+        "status": "INFO",
+        "message": "Audio enhancement skipped by user choice"
+      },
+      {
+        "step": "MODEL_INIT",
+        "status": "INFO",
+        "message": "Initializing AI models"
+      },
+      {
+        "step": "MODEL_INIT",
+        "status": "SUCCESS",
+        "message": "AI models initialized successfully"
+      },
+      {
+        "step": "TRANSCRIPTION",
+        "status": "INFO",
+        "message": "Starting transcription of: fd6ef0eb-da2e-4a40-a54d-fd11fb453169_accidents_standardized.wav"
+      },
+      {
+        "step": "TRANSCRIPTION",
+        "status": "SUCCESS",
+        "message": "Transcription completed",
+        "detected_language": "en",
+        "transcript_length_chars": 754
+      },
+      {
+        "step": "CORRECTION",
+        "status": "INFO",
+        "message": "Applying language rule correction"
+      },
+      {
+        "step": "CORRECTION",
+        "status": "SUCCESS",
+        "message": "Language correction applied"
+      },
+      {
+        "step": "TEXT_PROCESSING",
+        "status": "INFO",
+        "message": "Starting text processing and summarization"
+      },
+      {
+        "step": "TEXT_CHUNKING",
+        "status": "SUCCESS",
+        "message": "Text split into chunks",
+        "num_chunks": 1,
+        "chunk_size": 2000
+      },
+      {
+        "step": "CLUSTERING",
+        "status": "INFO",
+        "message": "Few Chunks - no clustering needed"
+      },
+      {
+        "step": "SUMMARIZATION",
+        "status": "INFO",
+        "message": "Generating comprehensive summary"
+      },
+      {
+        "step": "SUMMARIZATION",
+        "status": "SUCCESS",
+        "message": "Final summary generated",
+        "summary_length_chars": 191
+      },
+      {
+        "step": "PIPELINE_COMPLETE",
+        "status": "SUCCESS",
+        "message": "Pipeline completed successfully"
+      }
+    ]
+  },
+  {
+    "run_id": 5,
+    "logs": [
+      {
+        "step": "INITIALIZATION",
+        "status": "INFO",
+        "message": "Starting audio/video processing pipeline",
+        "input_file": "C:\\Users\\user\\AppData\\Local\\Temp\\a3fa3b96-6ce0-423d-8005-0e071c0ef0cf_accidents.mp3",
+        "transcriber_model": "small",
+        "denoise_enabled": false,
+        "aggressive_denoise": false
+      },
+      {
+        "step": "FILE_VALIDATION",
+        "status": "SUCCESS",
+        "message": "Input file validated",
+        "file_type": ".mp3"
+      },
+      {
+        "step": "AUDIO_CONVERSION",
+        "status": "INFO",
+        "message": "Starting audio format standardization"
+      },
+      {
+        "step": "AUDIO_PROCESSING",
+        "status": "INFO",
+        "message": "Processing audio file: 'a3fa3b96-6ce0-423d-8005-0e071c0ef0cf_accidents.mp3'"
+      },
+      {
+        "step": "AUDIO_PROCESSING",
+        "status": "SUCCESS",
+        "message": "Audio format standardized",
+        "output_file": "data\\audio\\a3fa3b96-6ce0-423d-8005-0e071c0ef0cf_accidents_standardized.wav"
+      },
+      {
+        "step": "AUDIO_ENHANCEMENT",
+        "status": "INFO",
+        "message": "Audio enhancement skipped by user choice"
+      },
+      {
+        "step": "MODEL_INIT",
+        "status": "INFO",
+        "message": "Initializing AI models"
+      },
+      {
+        "step": "MODEL_INIT",
+        "status": "SUCCESS",
+        "message": "AI models initialized successfully"
+      },
+      {
+        "step": "TRANSCRIPTION",
+        "status": "INFO",
+        "message": "Starting transcription of: a3fa3b96-6ce0-423d-8005-0e071c0ef0cf_accidents_standardized.wav"
+      },
+      {
+        "step": "TRANSCRIPTION",
+        "status": "SUCCESS",
+        "message": "Transcription completed",
+        "detected_language": "en",
+        "transcript_length_chars": 754
+      },
+      {
+        "step": "CORRECTION",
+        "status": "INFO",
+        "message": "Applying language rule correction"
+      },
+      {
+        "step": "CORRECTION",
+        "status": "SUCCESS",
+        "message": "Language correction applied"
+      },
+      {
+        "step": "TEXT_PROCESSING",
+        "status": "INFO",
+        "message": "Starting text processing and summarization"
+      },
+      {
+        "step": "TEXT_CHUNKING",
+        "status": "SUCCESS",
+        "message": "Text split into chunks",
+        "num_chunks": 1,
+        "chunk_size": 2000
+      },
+      {
+        "step": "CLUSTERING",
+        "status": "INFO",
+        "message": "Few Chunks - no clustering needed"
+      },
+      {
+        "step": "SUMMARIZATION",
+        "status": "INFO",
+        "message": "Generating comprehensive summary"
+      },
+      {
+        "step": "SUMMARIZATION",
+        "status": "SUCCESS",
+        "message": "Final summary generated",
+        "summary_length_chars": 317
+      },
+      {
+        "step": "PIPELINE_COMPLETE",
+        "status": "SUCCESS",
+        "message": "Pipeline completed successfully"
+      }
+    ]
+  },
+  {
+    "run_id": 6,
+    "logs": [
+      {
+        "step": "INITIALIZATION",
+        "status": "INFO",
+        "message": "Starting audio/video processing pipeline",
+        "input_file": "C:\\Users\\user\\AppData\\Local\\Temp\\6f38c73d-5d1f-4fe0-851c-3cdd1f259db9_accidents.mp3",
+        "transcriber_model": "small",
+        "denoise_enabled": false,
+        "aggressive_denoise": false
+      },
+      {
+        "step": "FILE_VALIDATION",
+        "status": "SUCCESS",
+        "message": "Input file validated",
+        "file_type": ".mp3"
+      },
+      {
+        "step": "AUDIO_CONVERSION",
+        "status": "INFO",
+        "message": "Starting audio format standardization"
+      },
+      {
+        "step": "AUDIO_PROCESSING",
+        "status": "INFO",
+        "message": "Processing audio file: '6f38c73d-5d1f-4fe0-851c-3cdd1f259db9_accidents.mp3'"
+      },
+      {
+        "step": "AUDIO_PROCESSING",
+        "status": "SUCCESS",
+        "message": "Audio format standardized",
+        "output_file": "data\\audio\\6f38c73d-5d1f-4fe0-851c-3cdd1f259db9_accidents_standardized.wav"
+      },
+      {
+        "step": "AUDIO_ENHANCEMENT",
+        "status": "INFO",
+        "message": "Audio enhancement skipped by user choice"
+      },
+      {
+        "step": "MODEL_INIT",
+        "status": "INFO",
+        "message": "Initializing AI models"
+      },
+      {
+        "step": "MODEL_INIT",
+        "status": "SUCCESS",
+        "message": "AI models initialized successfully"
+      },
+      {
+        "step": "TRANSCRIPTION",
+        "status": "INFO",
+        "message": "Starting transcription of: 6f38c73d-5d1f-4fe0-851c-3cdd1f259db9_accidents_standardized.wav"
+      },
+      {
+        "step": "TRANSCRIPTION",
+        "status": "SUCCESS",
+        "message": "Transcription completed",
+        "detected_language": "en",
+        "transcript_length_chars": 754
+      },
+      {
+        "step": "CORRECTION",
+        "status": "INFO",
+        "message": "Applying language rule correction"
+      },
+      {
+        "step": "CORRECTION",
+        "status": "SUCCESS",
+        "message": "Language correction applied"
+      },
+      {
+        "step": "TEXT_PROCESSING",
+        "status": "INFO",
+        "message": "Starting text processing and summarization"
+      },
+      {
+        "step": "TEXT_CHUNKING",
+        "status": "SUCCESS",
+        "message": "Text split into chunks",
+        "num_chunks": 1,
+        "chunk_size": 2000
+      },
+      {
+        "step": "CLUSTERING",
+        "status": "INFO",
+        "message": "Few Chunks - no clustering needed"
+      },
+      {
+        "step": "SUMMARIZATION",
+        "status": "INFO",
+        "message": "Generating comprehensive summary"
+      },
+      {
+        "step": "SUMMARIZATION",
+        "status": "SUCCESS",
+        "message": "Final summary generated",
+        "summary_length_chars": 264
+      },
+      {
+        "step": "PIPELINE_COMPLETE",
+        "status": "SUCCESS",
+        "message": "Pipeline completed successfully"
+      }
+    ]
+  },
+  {
+    "run_id": 7,
+    "logs": [
+      {
+        "step": "INITIALIZATION",
+        "status": "INFO",
+        "message": "Starting audio/video processing pipeline",
+        "input_file": "C:\\Users\\user\\AppData\\Local\\Temp\\02441afb-656f-41c1-becf-2cba49dbe9ce_accidents.mp3",
+        "transcriber_model": "small",
+        "denoise_enabled": false,
+        "aggressive_denoise": false
+      },
+      {
+        "step": "FILE_VALIDATION",
+        "status": "SUCCESS",
+        "message": "Input file validated",
+        "file_type": ".mp3"
+      },
+      {
+        "step": "AUDIO_CONVERSION",
+        "status": "INFO",
+        "message": "Starting audio format standardization"
+      },
+      {
+        "step": "AUDIO_PROCESSING",
+        "status": "INFO",
+        "message": "Processing audio file: '02441afb-656f-41c1-becf-2cba49dbe9ce_accidents.mp3'"
+      },
+      {
+        "step": "AUDIO_PROCESSING",
+        "status": "SUCCESS",
+        "message": "Audio format standardized",
+        "output_file": "data\\audio\\02441afb-656f-41c1-becf-2cba49dbe9ce_accidents_standardized.wav"
+      },
+      {
+        "step": "AUDIO_ENHANCEMENT",
+        "status": "INFO",
+        "message": "Audio enhancement skipped by user choice"
+      },
+      {
+        "step": "MODEL_INIT",
+        "status": "INFO",
+        "message": "Initializing AI models"
+      },
+      {
+        "step": "MODEL_INIT",
+        "status": "SUCCESS",
+        "message": "AI models initialized successfully"
+      },
+      {
+        "step": "TRANSCRIPTION",
+        "status": "INFO",
+        "message": "Starting transcription of: 02441afb-656f-41c1-becf-2cba49dbe9ce_accidents_standardized.wav"
+      },
+      {
+        "step": "TRANSCRIPTION",
+        "status": "SUCCESS",
+        "message": "Transcription completed",
+        "detected_language": "en",
+        "transcript_length_chars": 754
+      },
+      {
+        "step": "CORRECTION",
+        "status": "INFO",
+        "message": "Applying language rule correction"
+      },
+      {
+        "step": "CORRECTION",
+        "status": "SUCCESS",
+        "message": "Language correction applied"
+      },
+      {
+        "step": "TEXT_PROCESSING",
+        "status": "INFO",
+        "message": "Starting text processing and summarization"
+      },
+      {
+        "step": "TEXT_CHUNKING",
+        "status": "SUCCESS",
+        "message": "Text split into chunks",
+        "num_chunks": 1,
+        "chunk_size": 2000
+      },
+      {
+        "step": "CLUSTERING",
+        "status": "INFO",
+        "message": "Few Chunks - no clustering needed"
+      },
+      {
+        "step": "SUMMARIZATION",
+        "status": "INFO",
+        "message": "Generating comprehensive summary"
+      },
+      {
+        "step": "SUMMARIZATION",
+        "status": "SUCCESS",
+        "message": "Final summary generated",
+        "summary_length_chars": 248
+      },
+      {
+        "step": "PIPELINE_COMPLETE",
+        "status": "SUCCESS",
+        "message": "Pipeline completed successfully"
+      }
+    ]
   }
 ]

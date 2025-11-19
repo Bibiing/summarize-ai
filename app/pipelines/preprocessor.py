@@ -7,7 +7,7 @@ from scipy import signal
 from concurrent.futures import ProcessPoolExecutor
 from functools import partial
 import multiprocessing as mp
-from pipelines.converter import convert_audio_format
+from .converter import convert_audio_format
 
 def audio_quality(data: np.ndarray, sr: int) -> dict:
     """

@@ -2,13 +2,17 @@ import time
 from sklearn.cluster import HDBSCAN
 from collections import defaultdict
 import google.generativeai as genai
-from langchain.text_splitter import RecursiveCharacterTextSplitter # https://python.langchain.com/docs/how_to/recursive_text_splitter/
+from langchain_text_splitters import RecursiveCharacterTextSplitter # https://python.langchain.com/docs/how_to/recursive_text_splitter/
 from sentence_transformers import SentenceTransformer # https://sbert.net/
+from app.pipelines.senopati_model import SenopatiModel
+
+import requests
 
 class Summarizer:
-    def __init__(self, gemini_model):
+    def __init__(self, senopati_model):
         self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
-        self.gemini_model = gemini_model
+        self.senopati_model = senopati_model
+
 
     def chunk_text(self, text, max_chunk_size=1500):
         """
@@ -70,7 +74,7 @@ class Summarizer:
                 f"---\nTEXT:\n{full_cluster_text}\n---\nSUMMARY:"
             )            
             try:
-                response = self.gemini_model.generate_content(prompt)
+                response = self.senopati_model.generate_content(prompt)
                 cluster_summaries.append(response.text)
                 print(f"Summary for Cluster {cluster_id} completed.")
             except Exception as e:
@@ -85,7 +89,7 @@ class Summarizer:
             f"---\nKEY POINTS:\n- {all_summaries_text}\n---\nFINAL SUMMARY PARAGRAPH:"
         )
         try:
-            final_response = self.gemini_model.generate_content(final_prompt)
+            final_response = self.senopati_model.generate_content(final_prompt)
             return cluster_summaries, final_response.text
         except Exception as e:
             print(f"Failed to create final summary. Error: {e}")

@@ -1,27 +1,28 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
-import google.generativeai as genai
 
 from app.pipelines.converter import convert_video_to_audio, convert_audio_format
 from app.pipelines.transcriber import Transcriber
 from app.pipelines.summarizer import Summarizer
 from app.pipelines.preprocessor import enhance_audio
 from app.helper import JSONLogger
+from app.pipelines.senopati_model import SenopatiModel  # <-- Tambahan
 
 load_dotenv()
 
+###########################
+#  Senopati Model Init    #
+###########################
+
 try:
-    print("Initializing Gemini model...")
-    GEMINI_API_KEY = os.getenv("GOOGLE_API_KEY")
-    if not GEMINI_API_KEY:
-        raise ValueError("GOOGLE_API_KEY not found in .env file")
-    genai.configure(api_key=GEMINI_API_KEY)
-    gemini_model = genai.GenerativeModel('gemini-2.0-flash') 
-    print("Gemini model initialized successfully.")
+    print("Initializing Senopati Local Model...")
+    senopati_model = SenopatiModel()
+    print("Senopati model ready.")
 except Exception as e:
-    print(f"FATAL: Gemini model initialization failed: {e}")
+    print(f"FATAL: Senopati model initialization failed: {e}")
     exit(1)
+
 
 def run_pipeline(
     input_file: Path,
@@ -42,6 +43,7 @@ def run_pipeline(
                denoise_enabled=denoise,
                aggressive_denoise=aggressive_denoise)
 
+    # === FILE VALIDATION ===
     if not input_file.exists():
         logger.log("FILE_VALIDATION", "ERROR", f"Input file not found: {input_file}")
         return {"error": f"File not found: {input_file}"}
@@ -54,6 +56,7 @@ def run_pipeline(
     logger.log("FILE_VALIDATION", "SUCCESS", "Input file validated", file_type=input_type)
     logger.log("AUDIO_CONVERSION", "INFO", "Starting audio format standardization")
     
+    # === VIDEO OR AUDIO CONVERSION ===
     if input_type in [".mp4", ".mkv", ".mov"]:
         logger.log("VIDEO_PROCESSING", "INFO", f"Processing video file: '{input_file.name}'")
         output_dir = Path("./data/audio")
@@ -81,11 +84,8 @@ def run_pipeline(
         else:
             audio_path = input_file
             logger.log("AUDIO_PROCESSING", "INFO", f"Using WAV file directly: {audio_path.name}")
-    else:
-        logger.log("FILE_VALIDATION", "ERROR", f"Unsupported file type: '{input_file.suffix}'",
-                   supported_formats=[".mp4", ".mp3", ".wav", ".m4a", ".flac", ".ogg"])
-        return {"error": "Unsupported file type"}
-    
+
+    # === AUDIO ENHANCEMENT ===
     if denoise or aggressive_denoise:
         logger.log("AUDIO_ENHANCEMENT", "INFO", "Starting audio enhancement", aggressive_mode=aggressive_denoise)
         enhanced_audio_path = enhance_audio(audio_path, aggressive_mode=aggressive_denoise)
@@ -97,20 +97,18 @@ def run_pipeline(
     else:
         logger.log("AUDIO_ENHANCEMENT", "INFO", "Audio enhancement skipped by user choice")
 
-    # transcription and summarization api calls
+    # === AI MODEL INIT (TRANSCRIBER & SUMMARIZER) ===
     logger.log("MODEL_INIT", "INFO", "Initializing AI models")
     try:
-        transcriber = Transcriber(model_name=transcriber_model, gemini_model=gemini_model)
-        summarizer = Summarizer(gemini_model=gemini_model)
+        transcriber = Transcriber(model_name=transcriber_model, senopati_model=senopati_model)
+        summarizer = Summarizer(senopati_model)
         logger.log("MODEL_INIT", "SUCCESS", "AI models initialized successfully")
     except Exception as e:
         logger.log("MODEL_INIT", "ERROR", f"Initialization error: {e}")
         return {"error": f"Model initialization failed: {str(e)}"}
 
-    if language is not None and language.strip().lower() in ["", "none", "string"]:
-        language = None
 
-    # transcription 
+    # === TRANSCRIPTION ===
     logger.log("TRANSCRIPTION", "INFO", f"Starting transcription of: {audio_path.name}")
     result, detected_language = transcriber.transcribe(audio_path, language=language)
     if result:
@@ -124,14 +122,14 @@ def run_pipeline(
         logger.log("TRANSCRIPTION", "ERROR", "Transcription failed")
         return {"error": "Transcription failed"}
 
-    # chunking 
+    # === CHUNKING ===
     logger.log("TEXT_PROCESSING", "INFO", "Starting text processing and summarization")
     chunks = summarizer.chunk_text(transcript, chunk_size)
     logger.log("TEXT_CHUNKING", "SUCCESS", "Text split into chunks",
                num_chunks=len(chunks),
                chunk_size=chunk_size)
 
-    # clustering
+    # === CLUSTERING ===
     if len(chunks) > 7:
         logger.log("CLUSTERING", "INFO", "Clustering chunks by topic")
         clusters = summarizer.cluster_chunks(chunks)
@@ -141,7 +139,7 @@ def run_pipeline(
         clusters = {0: chunks}
         logger.log("CLUSTERING", "INFO", "Few Chunks - no clustering needed")
 
-    #summarization
+    # === SUMMARIZATION ===
     logger.log("SUMMARIZATION", "INFO", "Generating comprehensive summary")
     cluster_summaries, final_summary = summarizer.get_final_summary(clusters, language=detected_language)
     logger.log("SUMMARIZATION", "SUCCESS", "Final summary generated",
@@ -150,6 +148,7 @@ def run_pipeline(
     logger.log("PIPELINE_COMPLETE", "SUCCESS", "Pipeline completed successfully")
     logger.save()
 
+    # CLEANUP
     temp_folders  = [Path("data/audio/enhanced"), Path("data/temp"), Path("data/audio")]
     for folder in temp_folders:
         try:
